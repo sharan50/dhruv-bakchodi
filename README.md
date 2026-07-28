@@ -41,16 +41,31 @@ ramps as you descend, with the occasional easier run thrown in as a breather. Ea
 section gets a gate banner across the piste, a pair of trailside signs, a name and a
 number, in the European grading system:
 
-**GREEN** 9–13° · **BLUE** 14–19° · **RED** 21–27° · **BLACK** 29–36° · **DOUBLE BLACK** 37–45°
+| | pitch | narrowest | widest |
+|---|---|---|---|
+| **GREEN** | 9–13° | 27 m | 57 m |
+| **BLUE** | 14–19° | 21 m | 45 m |
+| **RED** | 21–27° | 15 m | 34 m |
+| **BLACK** | 29–36° | 12 m | 27 m |
+| **DOUBLE BLACK** | 37–45° | 10 m | 23 m |
 
-Steeper sections are narrower, more heavily gladed, more likely to be a mogul field,
-and get rowdier terrain. Along the way: groomed corduroy, moguls, rollers and kickers
-you can launch off, orange piste markers, B-net on the steeps, snow guns, hay-bale
-padding, a running chairlift, and trees that will absolutely end your run.
+**The trail actually goes somewhere.** The centreline snakes across five scales at
+once — broad traverses across the face down to turns you take every few seconds —
+peaking at 40° off the fall line and averaging 12°. On top of that the corridor
+pinches and opens, so a black can choke to 12 m and then release into a bowl. The
+piste banks into its own turns, outside edge riding higher.
 
-A 6½-minute autopiloted test run covered 3,198 m and 908 m of vertical without
-reaching the end, because there isn't one. The strip on the right edge of the HUD
-shows what's coming.
+The upshot is that you cannot straight-line it. A full tuck with no steering runs
+about 470–550 m, roughly 30 seconds, before it puts you into the trees or buries the
+tips in deep snow. A skilled line covering the same ground goes indefinitely — the
+tracked test run did 2,465 m and 636 m of vertical in five and a half minutes and was
+still descending.
+
+Steeper sections are narrower, more heavily gladed and more likely to be a mogul
+field. Along the way: groomed corduroy, moguls, rollers and kickers you can launch
+off, orange piste markers, B-net on the steeps, snow guns, hay-bale padding, a running
+chairlift, and trees that will absolutely end your run. The strip on the right edge of
+the HUD shows what's coming.
 
 ## How it works
 
