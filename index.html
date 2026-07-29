@@ -464,6 +464,12 @@ function zData(z) {
   // berm on a hard-swerving trail makes uphill pockets. Keep it well under the
   // fall line, and scale with pitch.
   c.bermG  = 0.13 * clamp(Math.sin(p.slope) / 0.19, 0.85, 2.6);
+  // Off-piste relief, pitch-scaled for the same reason. Measured, the two
+  // drift octaves peak at 0.70 m/m of down-slope gradient — 361% of a green's
+  // fall line, i.e. guaranteed uphill pockets. This holds them near 50% on
+  // every grade; the *look* of deep snow is carried by shading instead, which
+  // costs nothing physically. Steeper off-piste being rougher is also true.
+  c.offAmp = clamp(Math.tan(p.slope) * 0.72, 0.16, 0.90);
   c.mogul  = p.mogul;
   c.rough  = p.rough;
   c.roll   = p.roll * 1.15 * Math.sin(z * 0.0575 + p.phase) * (0.62 + 0.38 * Math.sin(z * 0.0187 + 2.1));
@@ -496,7 +502,13 @@ function terrainH(x, z) {
 
   // surface texture / chatter
   h += c.rough * 0.32 * (fbm(x * 0.075, z * 0.075, 2) - 0.5);
-  if (onPiste < 0.98) h += (1 - onPiste) * 1.55 * (fbm(x * 0.115, z * 0.115, 3) - 0.5);
+  // Off piste is naturally stacked snow: broad wind drifts with a finer lumpy
+  // crust on top. Two scales, because one octave reads as smooth rolling hills.
+  if (onPiste < 0.98) {
+    const off = (1 - onPiste) * c.offAmp;
+    h += off * 1.60 * (fbm(x * 0.115, z * 0.115, 3) - 0.5);
+    h += off * 0.46 * (fbm(x * 0.440, z * 0.440, 2) - 0.5);
+  }
 
   // kickers
   for (let i = 0; i < activeKickN; i++) {
@@ -1056,7 +1068,13 @@ function stepPhysics(dt) {
        that is flat or slightly uphill. A real skier just poles or skates out,
        so do that: only when genuinely stopped and NOT holding an edge, which
        keeps a deliberate hockey-stop parked on the hill exactly as before. */
-    if (sp < 1.1 && Math.abs(steerIn) < 0.01) S.stuckT += dt; else S.stuckT = 0;
+    // A genuine flat spot is detectable: gravity along the surface goes to
+    // nothing. Escape from one regardless of steering — otherwise a player
+    // holding a direction to get out is exactly who stays trapped. On a real
+    // slope, stopped means you're holding an edge, so leave them parked.
+    const gTan = PHYS.G * Math.sqrt(Math.max(0, 1 - ny * ny));
+    if (sp < 1.1 && (Math.abs(steerIn) < 0.01 || gTan < 1.7)) S.stuckT += dt;
+    else S.stuckT = 0;
     if (S.stuckT > 1.0) {
       const toC = centerAt(S.z) - S.x;
       S.vz += 2.8 * dt;
@@ -1407,22 +1425,105 @@ function shadeSnow(x, z, nx, ny, nz, onPiste, depth, groomed) {
   // Snow only ever occupies the top of the lambert range, so stretch that
   // window — without it a whole mogul field reads as one flat white sheet.
   v = clamp((v - 0.52) / 0.46, 0, 1);
-  // groomer corduroy on the piste, powder texture off it. Corduroy is ~2.5 m
-  // wide; past ~26 m the sample grid is coarser than that and it aliases into
-  // moiré, so fade it out before that happens.
-  if (groomed > 0.02 && onPiste > 0.15 && depth < 34) {
-    const cord = Math.sin(x * 1.55) * 0.5 + 0.5;
-    v += (cord - 0.5) * 0.115 * onPiste * groomed * (1 - sstep(16, 34, depth));
-  } else if (onPiste <= 0.15 && depth < 60) {
-    v += (vnoise(x * 1.9, z * 1.9) - 0.5) * 0.13 * (1 - sstep(34, 60, depth));
+
+  // Corduroy is NOT done here — machine grooves are ~10 cm apart and no vertex
+  // grid can resolve that, which is why shading it as a ripple only ever read
+  // as vague fabric banding. It is drawn as real geometry in drawCorduroy().
+  const off = 1 - onPiste;
+  if (off > 0.02) {
+    // untracked snow sits deeper and duller than a freshly tilled surface
+    v -= off * 0.10;
+    // Drift mottling, done in shading rather than height. Geometry this size
+    // would out-run the fall line and re-create the uphill pockets; as pure
+    // shading it costs nothing physically and, unlike real relief, it survives
+    // the distance low-pass that smooths the normals away.
+    v += (fbm(x * 0.09, z * 0.09, 2) - 0.5) * 0.22 * off * (1 - sstep(50, 95, depth));
+    // crystal sparkle up close — this is what says "nobody has skied this"
+    if (depth < 45) {
+      v += (vnoise(x * 2.7, z * 2.7) - 0.5) * 0.17 * off * (1 - sstep(24, 45, depth));
+    }
   }
+  // the cut edge of the piste reads as a faint seam where tilled meets natural
+  if (depth < 55) v -= (1 - Math.abs(onPiste - 0.5) * 2) * 0.055 * (1 - sstep(32, 55, depth));
+
   return clamp(v, 0, 1);
+}
+
+/* ---------------------------------------------------------- corduroy -----
+   Real grooves, drawn as lines that follow the piste centreline and lie on
+   the terrain, so they converge to the vanishing point and bend with the
+   trail exactly as machine tracks do.
+
+   Spacing is a power-of-two mip off a fixed 0.14 m lattice, so a groove
+   visible in a far band is still there in the near band — no swimming. Drawn
+   per depth slab, interleaved with the terrain rows, so a roller in front
+   correctly hides the grooves behind it.                                    */
+const CORD_FAR = 30, CORD_SLABS = 9, CORD_BASE = 0.14;
+const CORD_D = new Float32Array(CORD_SLABS + 1);
+for (let i = 0; i <= CORD_SLABS; i++) {
+  const t = i / CORD_SLABS;
+  CORD_D[i] = 1 / ((1 - t) / NEAR_Z + t / CORD_FAR);
+}
+let camTanH = 1;
+
+function drawCorduroy(k) {
+  const dN = CORD_D[k], dF = CORD_D[k + 1];
+  const zN = cam.z + dN, zF = cam.z + dF;
+
+  const pN = paramsAt(zN), hwN = pN.width;
+  const groom = clamp(1 - pN.mogul * 2.4, 0, 1);      // mogul fields aren't groomed
+  if (groom < 0.05) return;
+  const alpha = 0.23 * groom * (1 - sstep(CORD_FAR * 0.5, CORD_FAR, dN));
+  if (alpha < 0.012) return;
+
+  const cN = centerAt(zN), cF = centerAt(zF);
+  const pF = paramsAt(zF), hwF = pF.width;
+
+  // three height samples per end is plenty — a groomed surface is smooth, and
+  // this keeps the whole pass at ~6 terrainH calls per slab
+  const yNC = terrainH(cN, zN), yNL = terrainH(cN - hwN, zN), yNR = terrainH(cN + hwN, zN);
+  const yFC = terrainH(cF, zF), yFL = terrainH(cF - hwF, zF), yFR = terrainH(cF + hwF, zF);
+
+  const want = clamp(dN * 8 / focal, CORD_BASE, 4);
+  const step = Math.max(1, Math.pow(2, Math.round(Math.log2(want / CORD_BASE))));
+  const sp = CORD_BASE * step;
+
+  // only the part of the piste actually on screen at this depth
+  const halfVis = dN * camTanH + 3;
+  const axis = cam.x + fwdX * dN;
+  const lo = Math.max(-hwN, axis - halfVis - cN);
+  const hi = Math.min(hwN, axis + halfVis - cN);
+  if (hi - lo < sp) return;
+
+  const i0 = Math.ceil(lo / sp), i1 = Math.floor(hi / sp);
+  if (i1 - i0 > 220) return;                          // sanity guard
+
+  ctx.beginPath();
+  let drawn = 0;
+  for (let i = i0; i <= i1; i++) {
+    const o = i * sp;
+    const tN = o / hwN, tF = o / hwF;
+    const yN = tN < 0 ? yNC + (yNL - yNC) * -tN : yNC + (yNR - yNC) * tN;
+    const yF = tF < 0 ? yFC + (yFL - yFC) * -tF : yFC + (yFR - yFC) * tF;
+    const a = project(cF + o, yF + 0.02, zF); if (!a.ok) continue;
+    const ax = a.x, ay = a.y;
+    const b = project(cN + o, yN + 0.02, zN); if (!b.ok) continue;
+    if ((ax < -40 && b.x < -40) || (ax > W + 40 && b.x > W + 40)) continue;
+    ctx.moveTo(ax, ay); ctx.lineTo(b.x, b.y);
+    drawn++;
+  }
+  if (!drawn) return;
+  const fog = fogAt(dN);
+  ctx.strokeStyle = 'rgba(126,156,199,' + (alpha * (1 - fog)).toFixed(3) + ')';
+  ctx.lineWidth = Math.max(0.7, DPR * 0.9);
+  ctx.stroke();
 }
 
 function drawTerrain(horizon) {
   // pitching the camera down widens the ground footprint the frustum covers
   const tanH = Math.tan((0.92 + cam.fovBoost) * 0.5) * (W / H)
              * (1.08 / Math.max(0.34, Math.cos(cam.pitch)));
+  camTanH = tanH;
   const rowGap = (1 / NEAR_Z - 1 / FAR_Z) / ROWS;   // d^2 * rowGap = row spacing
   // sample the grid
   for (let r = 0; r <= ROWS; r++) {
@@ -1462,6 +1563,9 @@ function drawTerrain(horizon) {
   // anything past the far edge of the grid goes down first
   while (rp < rl.length && rl[rp].cd > FAR_Z) drawItem(rl[rp++]);
 
+  // corduroy slabs, far -> near, drawn as their depth comes up in the row walk
+  let cordK = ROWS >= 22 ? CORD_SLABS - 1 : -1;
+
   for (let r = ROWS - 1; r >= 0; r--) {
     const dNear = rowDepth(r / ROWS);
     const dMid = rowDepth((r + 0.5) / ROWS);
@@ -1491,6 +1595,9 @@ function drawTerrain(horizon) {
       // only worth paying for on the near rows where they're visible
       if (seam) { ctx.strokeStyle = ctx.fillStyle; ctx.lineWidth = 1; ctx.stroke(); }
     }
+
+    // groomer corduroy sitting on the snow we just painted
+    while (cordK >= 0 && CORD_D[cordK] >= dNear) drawCorduroy(cordK--);
 
     // tracks carved into this band
     drawTracks(rowDepth((r + 1) / ROWS), dNear, fog);
