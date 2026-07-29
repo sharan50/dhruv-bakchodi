@@ -260,11 +260,12 @@ const PHYS = {
 };
 
 const DIFFS = [
-  { key:'green', label:'GREEN',        col:'#22c55e', ink:'#04220f', shape:'circle', slope:[9,13],  width:[27,35], mogul:0.00, rough:0.22, trees:0.30, roll:0.55, kick:0.15, glade:0    },
-  { key:'blue',  label:'BLUE',         col:'#3b82f6', ink:'#dbeafe', shape:'square', slope:[14,19], width:[23,31], mogul:0.10, rough:0.38, trees:0.48, roll:0.85, kick:0.30, glade:0    },
-  { key:'red',   label:'RED',          col:'#ef4444', ink:'#fee2e2', shape:'diamond',slope:[21,27], width:[18,26], mogul:0.38, rough:0.58, trees:0.70, roll:1.05, kick:0.45, glade:0.15 },
-  { key:'black', label:'BLACK',        col:'#0f172a', ink:'#e2e8f0', shape:'diamond',slope:[29,36], width:[14,22], mogul:0.72, rough:0.82, trees:0.92, roll:1.25, kick:0.58, glade:0.35 },
-  { key:'xblack',label:'DOUBLE BLACK', col:'#000000', ink:'#f8fafc', shape:'double', slope:[37,45], width:[11,18], mogul:0.96, rough:1.05, trees:1.10, roll:1.45, kick:0.70, glade:0.55 },
+  // width is the HALF-width of the piste in metres, before widthMod()
+  { key:'green', label:'GREEN',        col:'#22c55e', ink:'#04220f', shape:'circle', slope:[9,13],  width:[19,25], mogul:0.00, rough:0.22, trees:0.40, roll:0.70, kick:0.15, glade:0    },
+  { key:'blue',  label:'BLUE',         col:'#3b82f6', ink:'#dbeafe', shape:'square', slope:[14,19], width:[15,20], mogul:0.14, rough:0.40, trees:0.62, roll:1.00, kick:0.30, glade:0    },
+  { key:'red',   label:'RED',          col:'#ef4444', ink:'#fee2e2', shape:'diamond',slope:[21,27], width:[11,15], mogul:0.42, rough:0.60, trees:0.88, roll:1.25, kick:0.45, glade:0.15 },
+  { key:'black', label:'BLACK',        col:'#0f172a', ink:'#e2e8f0', shape:'diamond',slope:[29,36], width:[8.5,12], mogul:0.76, rough:0.85, trees:1.10, roll:1.45, kick:0.58, glade:0.35 },
+  { key:'xblack',label:'DOUBLE BLACK', col:'#000000', ink:'#f8fafc', shape:'double', slope:[37,45], width:[7,10],  mogul:0.98, rough:1.08, trees:1.30, roll:1.65, kick:0.70, glade:0.55 },
 ];
 
 const NAMES = [
@@ -287,8 +288,33 @@ const COURSE = {
   _cacheIdx: 0,
 };
 
-function centerAt(z) {   // the piste snakes down the mountain
-  return 25 * Math.sin(z * 0.00405) + 11.5 * Math.sin(z * 0.01133 + 1.7) + 4.5 * Math.sin(z * 0.0281 + 0.6);
+/* The piste snakes down the mountain across five scales at once: broad
+   traverses across the face, then progressively tighter turns. The short
+   components are what actually force you to ski — the long ones only move
+   the trail across the mountain. Peak lateral gradient ~0.85 m/m (40° off
+   the fall line), typical ~0.28, so the corridor is genuinely going
+   somewhere and you cannot hold a straight line down it. */
+function centerAt(z) {
+  return 26.0 * Math.sin(z * 0.00410)
+       + 13.0 * Math.sin(z * 0.01210 + 1.7)
+       +  7.5 * Math.sin(z * 0.02630 + 0.6)
+       +  4.0 * Math.sin(z * 0.05180 + 2.9)
+       +  2.2 * Math.sin(z * 0.08990 + 1.2);
+}
+/* second derivative of the above — the piste banks into its own turns */
+function centerCurv(z) {
+  return -(26.0 * 0.00410 * 0.00410 * Math.sin(z * 0.00410)
+         + 13.0 * 0.01210 * 0.01210 * Math.sin(z * 0.01210 + 1.7)
+         +  7.5 * 0.02630 * 0.02630 * Math.sin(z * 0.02630 + 0.6)
+         +  4.0 * 0.05180 * 0.05180 * Math.sin(z * 0.05180 + 2.9)
+         +  2.2 * 0.08990 * 0.08990 * Math.sin(z * 0.08990 + 1.2));
+}
+/* Chokes and openings within a run: pinches to ~62% of nominal width, opens
+   out to full. This is on top of the per-section width. */
+function widthMod(z) {
+  const a = 0.5 + 0.5 * Math.sin(z * 0.01730 + 0.9);
+  const b = 0.5 + 0.5 * Math.sin(z * 0.00710 + 2.3);
+  return 0.62 + 0.38 * (0.35 + 0.65 * a) * (0.45 + 0.55 * b) * 1.35;
 }
 function liftX(z) { return 74 + 16 * Math.sin(z * 0.0021 + 0.4) + centerAt(z) * 0.35; }
 
@@ -308,7 +334,7 @@ function makeSection() {
     tag: pick(RUN_TAGS),
     slope: rnd(D.slope[0], D.slope[1]) * DEG,
     width: rnd(D.width[0], D.width[1]),
-    mogul: D.mogul * rnd(0.55, 1.25) * (Math.random() < 0.42 ? 1 : 0.18),
+    mogul: D.mogul * rnd(0.55, 1.25) * (Math.random() < 0.62 ? 1 : 0.22),
     rough: D.rough * rnd(0.8, 1.2),
     roll:  D.roll  * rnd(0.7, 1.3),
     trees: D.trees, kick: D.kick, glade: D.glade * (Math.random() < 0.5 ? 1 : 0),
@@ -366,7 +392,7 @@ function paramsAt(z) {
   if (z < s.startZ + BL && i > 0)            { o = S[i - 1]; t = 0.5 * (1 - sstep(s.startZ, s.startZ + BL, z)); }
   else if (z > s.endZ - BL && i < S.length-1){ o = S[i + 1]; t = 0.5 * sstep(s.endZ - BL, s.endZ, z); }
   P.slope = lerp(s.slope, o.slope, t);
-  P.width = lerp(s.width, o.width, t);
+  P.width = lerp(s.width, o.width, t) * widthMod(z);   // chokes and openings
   P.mogul = lerp(s.mogul, o.mogul, t);
   P.rough = lerp(s.rough, o.rough, t);
   P.roll  = lerp(s.roll,  o.roll,  t);
@@ -428,7 +454,16 @@ function zData(z) {
   c.z = z;
   c.base   = baseElev(z);
   c.center = centerAt(z);
+  // Bank strength scales with pitch. It must not: the bank changes down-slope
+  // as the curvature does, and unscaled that gradient reaches 84% of a green's
+  // fall line — enough to flatten it into a pocket you can never roll out of.
+  c.curv   = centerCurv(z) * 26 * clamp(Math.sin(p.slope) * 2, 0.22, 1.3);
   c.width  = p.width;
+  // Max cross-slope gradient of the berm outside the markers. Anything shaped
+  // by distance-from-centre inherits the centreline's z-gradient, so a steep
+  // berm on a hard-swerving trail makes uphill pockets. Keep it well under the
+  // fall line, and scale with pitch.
+  c.bermG  = 0.13 * clamp(Math.sin(p.slope) / 0.19, 0.85, 2.6);
   c.mogul  = p.mogul;
   c.rough  = p.rough;
   c.roll   = p.roll * 1.15 * Math.sin(z * 0.0575 + p.phase) * (0.62 + 0.38 * Math.sin(z * 0.0187 + 2.1));
@@ -443,10 +478,15 @@ function terrainH(x, z) {
 
   // gentle crown on the piste, then banks rising outside the markers
   h -= 0.00085 * dx * dx * (adx < hw ? 1 : (hw * hw) / (adx * adx));
+  // smooth start, then asymptotically linear at gradient bermG
   const over = adx - hw;
-  if (over > 0) h += Math.min(6.5, 0.026 * over * over);
+  if (over > 0) h += c.bermG * over * over / (over + 6);
 
   const onPiste = 1 - sstep(hw * 0.86, hw * 1.16, adx);
+
+  // The piste banks into its own turns — outside edge rides higher. Scaled by
+  // dx/hw so a narrow couloir banks as hard as a wide green.
+  h += clamp(-(dx / hw) * c.curv, -2.4, 2.4) * onPiste;
 
   // moguls — a rotated hex-ish lattice, only where the piste is
   if (c.mogul > 0.02 && onPiste > 0.01) {
@@ -838,7 +878,7 @@ const S = {
   crouch:0,           // 0 tall .. 1 tuck
   speed:0, air:false, airT:0, airTotal:0, bestAir:0,
   onGround:true, risk:0, lat:0, skid:0, carveNoise:0, chatter:0, gForce:1,
-  edgeAngle:0, tuck:false, offPiste:0, popCd:0, lastPop:0,
+  edgeAngle:0, tuck:false, offPiste:0, popCd:0, lastPop:0, stuckT:0,
   dist:0, drop:0, startY:0, maxSpeed:0, time:0, alive:true, maxDiff:0,
 };
 
@@ -850,7 +890,7 @@ function resetSkier() {
   S.yaw = 0; S.edge = 0; S.steerS = 0; S.crouch = 0;
   S.speed = 2.4; S.air = false; S.airT = 0; S.airTotal = 0; S.bestAir = 0;
   S.onGround = true; S.risk = 0; S.lat = 0; S.skid = 0; S.carveNoise = 0; S.chatter = 0;
-  S.gForce = 1; S.edgeAngle = 0; S.tuck = false; S.offPiste = 0; S.popCd = 0;
+  S.gForce = 1; S.edgeAngle = 0; S.tuck = false; S.offPiste = 0; S.popCd = 0; S.stuckT = 0;
   S.dist = 0; S.drop = 0; S.startY = S.y; S.maxSpeed = 0; S.time = 0; S.alive = true; S.maxDiff = 0;
 }
 
@@ -998,16 +1038,30 @@ function stepPhysics(dt) {
             * dt * 60 * 0.35, 0.55 + S.skid + across * 0.5);
 
     /* -- balance erosion -- */
-    const comfort = (S.tuck ? 35.5 : PHYS.COMFORT[eff]) * lerp(1, 0.78, S.offPiste);
+    // A tuck is stable but it is not a licence to straight-line: you are on
+    // flat skis with no edge, so rough snow and narrow trails punish it.
+    const comfort = (S.tuck ? 28.5 : PHYS.COMFORT[eff]) * lerp(1, 0.66, S.offPiste);
     let load = 0;
     if (sp > comfort) load += (sp - comfort) / comfort * 1.5;
-    const rough = p.mogul * 0.85 + p.rough * 0.5 + S.offPiste * 0.75;
-    load += rough * clamp((sp - comfort * 0.45) / comfort, 0, 2) * 1.15;
+    const rough = p.mogul * 0.95 + p.rough * 0.55 + S.offPiste * 1.25;
+    load += rough * clamp((sp - comfort * 0.45) / comfort, 0, 2) * (S.tuck ? 1.75 : 1.15);
     load += clamp(Math.abs(vl) / (2.6 + eff * 3.4) - 0.55, 0, 2) * 0.85;
     if (need > gripMax * 1.05 && sp > 12) load += 0.35;        // edges washing out
     S.risk += (load - (0.42 + eff * 0.40)) * dt;
     S.risk = clamp(S.risk, 0, 1.05);
     if (S.risk >= 1) return crash(S.offPiste > 0.5 ? 'BURIED THE TIPS' : 'CAUGHT AN EDGE');
+
+    /* -- poling out of a flat spot --
+       Terrain built from additive features can always produce a local pocket
+       that is flat or slightly uphill. A real skier just poles or skates out,
+       so do that: only when genuinely stopped and NOT holding an edge, which
+       keeps a deliberate hockey-stop parked on the hill exactly as before. */
+    if (sp < 1.1 && Math.abs(steerIn) < 0.01) S.stuckT += dt; else S.stuckT = 0;
+    if (S.stuckT > 1.0) {
+      const toC = centerAt(S.z) - S.x;
+      S.vz += 2.8 * dt;
+      S.vx += clamp(toC * 0.25, -1.6, 1.6) * dt;
+    }
 
     /* -- pop / unweight -- */
     S.popCd = Math.max(0, S.popCd - dt);
