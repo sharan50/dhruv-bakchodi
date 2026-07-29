@@ -62,10 +62,35 @@ tracked test run did 2,465 m and 636 m of vertical in five and a half minutes an
 still descending.
 
 Steeper sections are narrower, more heavily gladed and more likely to be a mogul
-field. Along the way: groomed corduroy, moguls, rollers and kickers you can launch
-off, orange piste markers, B-net on the steeps, snow guns, hay-bale padding, a running
-chairlift, and trees that will absolutely end your run. The strip on the right edge of
-the HUD shows what's coming.
+field. Along the way: moguls, rollers and kickers you can launch off, orange piste
+markers, B-net on the steeps, snow guns, hay-bale padding, a running chairlift, and
+trees that will absolutely end your run. The strip on the right edge of the HUD shows
+what's coming.
+
+## Two surfaces
+
+You should never be in doubt about whether you're on the trail.
+
+**Groomed piste** carries real corduroy — the fine grooves a snowcat tiller leaves.
+They're drawn as actual lines that follow the piste centreline and lie on the terrain,
+so they converge to the vanishing point and bend with the trail the way machine tracks
+do. Spacing is a power-of-two mip off a fixed 14 cm lattice, so a groove visible in a
+far band is still there in the near band and nothing swims as you move. They're drawn
+per depth slab, interleaved with the terrain rows, so a roller in front correctly hides
+the grooves behind it. Your own tracks cut through them. A mogul field is, by
+definition, not groomed, so the corduroy fades out there.
+
+This deliberately isn't done as vertex shading. Grooves are ~10 cm apart and no sample
+grid resolves that — shading it as a ripple only ever read as vague fabric banding.
+
+**Off piste** is naturally stacked snow: wind drifts at two scales, a duller and deeper
+tone than a tilled surface, crystalline sparkle up close, and no grooves anywhere. The
+cut edge between the two reads as a faint seam.
+
+The drift mottling is deliberately *shading* rather than relief. Real relief at that
+scale out-runs the fall line and creates uphill pockets you can't roll out of — and
+unlike geometry, shading survives the distance low-pass that smooths normals away, so
+it still reads at 60 m.
 
 ## How it works
 
