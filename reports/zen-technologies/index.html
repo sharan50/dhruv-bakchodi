@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zen Technologies — Business Deep Dive</title>
+<link rel="stylesheet" href="assets/report.css">
+</head>
+<body>
+<div class="tip" id="tip"></div>
+<div class="layout">
+
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-mark">ZT</div>
+    <h1>Zen Technologies</h1>
+  </div>
+  <p class="brand-sub">NSE: ZENTEC · Business deep dive</p>
+  <nav class="nav" id="nav">
+    <a href="#overview"><span class="nav-num">01</span>Overview &amp; thesis</a>
+    <a href="#model"><span class="nav-num">02</span>Business model</a>
+    <a href="#segments"><span class="nav-num">03</span>Segments &amp; products</a>
+    <a href="#history"><span class="nav-num">04</span>History &amp; milestones</a>
+    <a href="#acquisitions"><span class="nav-num">05</span>Acquisitions decoded</a>
+    <a href="#leadership"><span class="nav-num">06</span>Leadership &amp; ownership</a>
+    <a href="#financials"><span class="nav-num">07</span>Financial performance</a>
+    <a href="#orderbook"><span class="nav-num">08</span>Order book &amp; contracts</a>
+    <a href="#competition"><span class="nav-num">09</span>Competition &amp; moat</a>
+    <a href="#risks"><span class="nav-num">10</span>Risks &amp; red flags</a>
+    <a href="#recent"><span class="nav-num">11</span>Recent developments</a>
+    <a href="#strategy"><span class="nav-num">12</span>Strategic direction</a>
+    <a href="#sources"><span class="nav-num">13</span>Sources &amp; method</a>
+  </nav>
+  <div class="side-foot">
+    Compiled 6 August 2026<br>Grounded in a 70-source NotebookLM corpus
+    <button class="themebtn" id="themebtn">Switch to dark</button>
+  </div>
+</aside>
+
+<main>
+<div class="inner">
+
+<!-- 01 -->
+<section id="overview" class="hero">
+  <p class="eyebrow">01 · Overview &amp; investment thesis</p>
+  <h2>An IP company that happens to sell hardware.</h2>
+  <p class="lede">
+    Zen Technologies designs combat training simulators and counter-drone systems, owns 100% of the
+    intellectual property behind them, and outsources almost all physical manufacturing. The physical
+    bill of materials is only a quarter to a third of product cost — the rest is software. That single
+    structural fact explains the ~73% gross margins, the insulation from input prices, and why FY26's
+    29% revenue decline did <em>not</em> dent unit economics.
+  </p>
+  <div class="tickerline">
+    <span class="chip">Founded <b>1993</b></span>
+    <span class="chip">HQ <b>Hyderabad</b></span>
+    <span class="chip">NSE <b>ZENTEC</b> · BSE <b>533339</b></span>
+    <span class="chip">Promoters <b>48.51%</b></span>
+    <span class="chip">Pledging <b>0%</b></span>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="k">FY26 revenue</div><div class="v">₹688 Cr</div><div class="d">−29.3% YoY</div></div>
+    <div class="stat"><div class="k">FY26 EBITDA margin</div><div class="v">48.4%</div><div class="d">vs 44.4% FY25</div></div>
+    <div class="stat"><div class="k">Order book</div><div class="v">₹1,239 Cr</div><div class="d">30 Jun 2026</div></div>
+    <div class="stat neg"><div class="k">Q1 FY27 order inflow</div><div class="v">₹44.6 Cr</div><div class="d">vs ₹2,500 Cr target</div></div>
+    <div class="stat pos"><div class="k">Net cash</div><div class="v">₹1,217 Cr</div><div class="d">D/E 0.01</div></div>
+    <div class="stat neg"><div class="k">Working capital</div><div class="v">543 days</div><div class="d">from 283</div></div>
+  </div>
+
+  <h3>The thesis in five lines</h3>
+  <ul class="tight">
+    <li><strong>The asset is IP, not plant.</strong> 155+ patents filed, 75–85 granted, ₹106.55 Cr of self-funded R&amp;D over five years to FY25 — with no DRDO co-ownership strings.</li>
+    <li><strong>The annuity is real, but half the size consensus assumes.</strong> Fitting an installed-base cohort model to eight years of disclosed revenue gives a 10-year economic life and a <strong>7.8% annual attach rate</strong> — a lifetime recurring stream worth <strong>~63% of the original sale value</strong>, not the 120% carried by the sell-side. See <a href="#financials">§07b</a>.</li>
+    <li><strong>Regulation is a moat.</strong> Buy Indian-IDDM procurement rules bar foreign primes from domestic land-simulator and C-UAS tenders.</li>
+    <li><strong>The binding constraint is order intake, not competitiveness.</strong> Gross margin held flat while revenue fell — but ₹44.6 Cr of Q1 inflow against a ₹2,500 Cr year-end target is the number that matters.</li>
+    <li><strong>The price assumes flawless execution.</strong> 82–86× trailing earnings, with working capital at 543 days and seven acquisitions still being integrated by a company of under 400 people.</li>
+  </ul>
+
+  <div class="callout warn">
+    <div class="lbl">The central tension</div>
+    <p>Zen is simultaneously the highest-quality business model in Indian listed defence — asset-light, IP-owning, annuity-backed — and a company whose revenue fell 29%, whose order intake has collapsed to a trickle, and whose working capital cycle has nearly doubled. Both statements are true, and the gap between them is the entire investment question.</p>
+  </div>
+</section>
+
+<!-- 02 -->
+<section id="model">
+  <p class="eyebrow">02 · Business model</p>
+  <h2>Three pillars</h2>
+  <p>Zen's economics are unusual for a defence manufacturer and closer to an industrial software licensor. Understanding the three pillars explains almost every other number in this report.</p>
+
+  <h3>1 · In-house, self-funded R&amp;D</h3>
+  <p>Most Indian defence peers develop products with DRDO funding and share the resulting rights. Zen chooses its own products, finances its own research, carries the full risk of failure, and <strong>retains 100% ownership of its IP</strong>. That is the source of both its margin structure and its export optionality.</p>
+  <div class="stats">
+    <div class="stat"><div class="k">R&amp;D, 5 yrs to FY25</div><div class="v">₹106.6 Cr</div></div>
+    <div class="stat"><div class="k">R&amp;D in FY24</div><div class="v">₹26.7 Cr</div></div>
+    <div class="stat"><div class="k">Patents filed</div><div class="v">155+</div></div>
+    <div class="stat"><div class="k">Patents granted</div><div class="v">75–85</div></div>
+  </div>
+
+  <h3>2 · Asset-light outsourced manufacturing</h3>
+  <p>Fabrication of hardware, metal enclosures, mechanical mounts, vehicle mockups and trailers is <strong>completely outsourced to a network of 400+ regional engineering vendors</strong>, primarily around Hyderabad. Zen keeps in-house only what carries the IP: final system integration, software installation, precision sensor calibration and quality control.</p>
+  <div class="figure">
+    <p class="figtitle">Where the value sits in a Zen product</p>
+    <p class="figsub">Physical bill of materials versus proprietary software and algorithms, share of final product cost</p>
+    <div id="chart-bom"></div>
+  </div>
+  <p>Because the BOM is only 25–35% of final product cost, Zen is largely insulated from raw material price moves and enjoys substantial operating leverage on the way up — and, as FY26 showed, operating <em>de</em>leverage on the way down.</p>
+
+  <h3>3 · The AMC annuity</h3>
+  <p>Equipment sales carry a warranty — Zen's own support page says 12 months, brokers say 36, and the empirical lag is three years — after which customers transition to Annual Maintenance Contracts. These are signed as discrete <strong>five-year blocks</strong>, not open-ended service agreements. Management scales the book deliberately to cover fixed operating overheads, protecting base profitability through lumpy procurement cycles.</p>
+  <p>The widely-quoted figures — 10% attach, 15-year life, 120% lifetime value — originate in broker notes, appear in no Zen filing, and do not survive contact with the disclosed revenue series. Fitted to eight years of actual data, the parameters are a <strong>10-year life and a 7.8% attach rate, giving ~63% of original equipment value</strong> over the platform's life. The full derivation, backtest and forward projection are in <a href="#financials">§07b</a>.</p>
+
+  <div class="callout">
+    <div class="lbl">Why exports are structured offshore</div>
+    <p>Zen operates <strong>Zen Technologies USA, Inc.</strong> and <strong>Zen Defence Technologies L.L.C. (UAE)</strong>. Three forces drive this: simulators and C-UAS fall under India's <strong>SCOMET</strong> export-control list requiring slow multi-agency licensing; Indian procurement rules give domestic armed forces orders <strong>legal priority over export orders</strong>, which delays foreign buyers when manufacturing is India-tied; and roughly 80% of defence product value is captured at design stage rather than assembly. This is a more complete explanation for weak export conversion than any commentary on demand.</p>
+  </div>
+</section>
+
+<!-- 03 -->
+<section id="segments">
+  <p class="eyebrow">03 · Segments &amp; products</p>
+  <h2>Five capabilities, one platform</h2>
+  <p>Zen has structurally transitioned from a land-based simulator specialist into a defence technology provider spanning five declared capabilities. The company has shipped <strong>1,000+ training systems to 100+ customers</strong> globally.</p>
+
+  <div class="twrap">
+    <table>
+      <caption>Capability map — what each line sells and how it arrived</caption>
+      <thead><tr><th>Capability</th><th>What it sells</th><th>Representative products</th><th>Origin</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Training &amp; simulation</strong></td><td>Virtual, live-fire and constructive training systems replicating combat without expending live ammunition</td><td>Zen STS (LOMAH), Zen MFTS, Zen CTSR, Zen CISR, Zen Shoot House, T-90 Crew Gunnery / Driving / Gunnery Simulators, BMP simulators, UAV simulator, AWeSim®, Combat Training Centres &amp; Nodes</td><td>Organic, since 1996</td></tr>
+        <tr><td><strong>Counter-drone / C-UAS</strong></td><td>Detection, tracking, jamming and hard-kill against unmanned aerial systems</td><td>AI-powered integrated anti-drone system, Hawkeye camera, high-altitude man-portable ADS, Integrated Smart Border Suite (ISBS)</td><td>Organic from 2018; Unistring (EW)</td></tr>
+        <tr><td><strong>Automated weapon stations</strong></td><td>Remote and unmanned remote-controlled weapon stations</td><td>Barbarik-URCWS, RCWS family</td><td>AiTuring Technologies</td></tr>
+        <tr><td><strong>Combat robotics</strong></td><td>Unmanned ground vehicles and autonomous platforms</td><td>Prahasta autonomous quadruped, Bhairav UGVs</td><td>Bhairav Robotics</td></tr>
+        <tr><td><strong>Drones</strong></td><td>Loitering munitions, UAVs and drone propulsion</td><td>TISA platforms, Vector propulsion</td><td>TISA Aerospace, Vector Technics</td></tr>
+        <tr><td><strong>Naval &amp; maritime simulation</strong></td><td>Marine, ports, mining and construction simulation plus DG Shipping e-governance</td><td>DNV Class A certified simulation platforms</td><td>Applied Research International, Anawave</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout warn">
+    <div class="lbl">A disclosure gap worth naming</div>
+    <p>Zen does not publish a clean segment-wise revenue split. The order book is disclosed by equipment versus AMC and by domestic versus export, but not by product line. Any "simulators are X% of revenue" figure you encounter is an estimate, not a reported number — treat it accordingly.</p>
+  </div>
+</section>
+
+<!-- 04 -->
+<section id="history">
+  <p class="eyebrow">04 · Corporate history</p>
+  <h2>Thirty-three years, three phases</h2>
+  <p>Zen's history divides cleanly: two decades building a simulator business organically, a pivot into counter-drone from 2018, and an aggressive acquisition phase from 2024 that rebuilt the company into a multi-domain group in under two years.</p>
+
+  <div class="tl">
+    <div class="tl-item major"><div class="tl-y">29 Jun 1993</div><div class="tl-t">Incorporated as <b>Zen Technologies and Computers Limited</b>, Hyderabad, by Ashok Atluri with Kishore Dutt Atluri and Ravi Kumar Midathala</div></div>
+    <div class="tl-item"><div class="tl-y">22 Feb 1995</div><div class="tl-t">Renamed <b>Zen Technologies Limited</b></div></div>
+    <div class="tl-item major"><div class="tl-y">1996</div><div class="tl-t">First product sold — <b>Zen SATS®</b></div></div>
+    <div class="tl-item"><div class="tl-y">2000</div><div class="tl-t">IPO on the Hyderabad Stock Exchange</div></div>
+    <div class="tl-item"><div class="tl-y">2002</div><div class="tl-t"><b>AWeSim®</b> launched</div></div>
+    <div class="tl-item"><div class="tl-y">30 Sep 2004</div><div class="tl-t">Listed on the <b>BSE</b></div></div>
+    <div class="tl-item"><div class="tl-y">2006 – 2012</div><div class="tl-t">BMP driving and missile simulators (2006) · live simulation (2008) · first tank simulator (2011) · UAV simulator (2012)</div></div>
+    <div class="tl-item"><div class="tl-y">2015</div><div class="tl-t">Combat Training Centres launched · listed on the <b>NSE</b> on 30 March</div></div>
+    <div class="tl-item major"><div class="tl-y">2018</div><div class="tl-t">First <b>AI centre</b> established — the pivot beyond simulation begins</div></div>
+    <div class="tl-item"><div class="tl-y">May 2019</div><div class="tl-t">Acquires 51% of <b>Unistring Tech Solutions</b> (electronic warfare) for ₹7.00 Cr</div></div>
+    <div class="tl-item"><div class="tl-y">2020 – 2021</div><div class="tl-t">Zen Medical Technologies acquired (Sep 2020) · <b>Anti-Drone System</b> launched (2021)</div></div>
+    <div class="tl-item major"><div class="tl-y">Aug 2024</div><div class="tl-t"><b>₹1,000 Cr QIP</b> at ₹1,601/share, subscribed over 5× — funds the acquisition programme</div></div>
+    <div class="tl-item major"><div class="tl-y">Feb 2025</div><div class="tl-t">Four acquisitions in one month: <b>ARI + ARI Labs</b> (76%), <b>Vector Technics</b> (51%), <b>Bhairav Robotics</b> (45.33%)</div></div>
+    <div class="tl-item"><div class="tl-y">Jun–Nov 2025</div><div class="tl-t"><b>TISA Aerospace</b> (54.67%) · ARI taken to <b>100%</b> in October · <b>Anawave Systems</b> (76%) in November</div></div>
+    <div class="tl-item major"><div class="tl-y">2026</div><div class="tl-t">New CFO (Jan) and <b>CTO Dr Sreenivas Rao Yellamanchali, former DRDO Director General</b> (May) · <b>Integrated Smart Border Suite</b> · AI-powered anti-drone system · high-altitude <b>MPADS</b> · new independent director appointed 4 August</div></div>
+  </div>
+
+  <div class="twrap">
+    <table>
+      <caption>Acquisition programme — eight entities, most inside eighteen months</caption>
+      <thead><tr><th>Target</th><th>Capability added</th><th>Stake</th><th>Date</th><th class="n">Consideration</th></tr></thead>
+      <tbody>
+        <tr><td>Unistring Tech Solutions</td><td>Electronic warfare</td><td>51%</td><td>May 2019</td><td class="n">₹7.00 Cr</td></tr>
+        <tr><td>Zen Medical Technologies</td><td>Medical devices</td><td>100%</td><td>29 Sep 2020</td><td class="n">—</td></tr>
+        <tr><td>AiTuring Technologies</td><td>Remote weapon stations, AI</td><td>51% → 49%</td><td>30 Mar 2024</td><td class="n">—</td></tr>
+        <tr><td><strong>Applied Research International + ARI Labs</strong></td><td>Naval &amp; maritime simulation, 121 IP assets, DNV Class A</td><td>76% → 100%</td><td>Feb → Oct 2025</td><td class="n"><strong>₹130.0 Cr</strong></td></tr>
+        <tr><td>Vector Technics</td><td>Drone propulsion</td><td>51%</td><td>Feb 2025</td><td class="n">₹25.0 Cr</td></tr>
+        <tr><td>Bhairav Robotics</td><td>Unmanned ground vehicles</td><td>45.33%</td><td>Feb 2025</td><td class="n">₹3.99 Cr</td></tr>
+        <tr><td>TISA Aerospace</td><td>Loitering munitions, UAVs</td><td>54.67%</td><td>Jun/Jul 2025</td><td class="n">₹6.6 Cr</td></tr>
+        <tr><td>Anawave Systems</td><td>Naval scenario training</td><td>76%</td><td>Nov 2025</td><td class="n">₹7.00 Cr</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="src">Note the asymmetry: ARI alone accounts for roughly 73% of disclosed consideration. The other six 2024–25 deals together cost about ₹42.6 Cr — these are capability acquisitions, not scale acquisitions.</p>
+</section>
+
+<!-- 05acq -->
+<section id="acquisitions">
+  <p class="eyebrow">05 · Acquisitions decoded</p>
+  <h2>Eight deals, two games</h2>
+  <p>Zen has made eight acquisitions since 2019 — six of them inside the eighteen months to November 2025. Read together, they are two different games being played at once: <strong>one flagship platform purchase</strong> (Applied Research International, taken to 100% for ₹130 Cr) and <strong>a string of cheap capability tuck-ins</strong> at ₹4–25 Cr each, structured as majority-but-not-full stakes that keep founders invested and prices nominal.</p>
+
+  <div class="stats">
+    <div class="stat"><div class="k">Disclosed consideration</div><div class="v">₹179.6 Cr</div><div class="d">across six priced deals</div></div>
+    <div class="stat"><div class="k">ARI's share of it</div><div class="v">72%</div><div class="d">₹130 Cr of the total</div></div>
+    <div class="stat"><div class="k">Median priced deal</div><div class="v">₹7 Cr</div><div class="d">options, not bets</div></div>
+    <div class="stat pos"><div class="k">QIP still undeployed</div><div class="v">~₹800 Cr</div><div class="d">of ₹979.5 Cr net raised</div></div>
+  </div>
+
+  <h3>Deal by deal — what each one brings</h3>
+
+  <div class="acq">
+    <div class="acq-head">
+      <h4>Unistring Tech Solutions</h4>
+      <div class="acq-meta"><span class="chip"><b>51%</b></span><span class="chip">May 2019</span><span class="chip"><b>₹7.00 Cr</b></span><span class="chip">Hyderabad</span></div>
+    </div>
+    <p><span class="wl">What it brings</span> Radio-frequency and electronic-warfare engineering — the layer underneath every jammer and anti-drone system Zen now sells. The C-UAS line's 70 MHz–12 GHz RF capability traces back here. Credible in its own right: UTS won a <strong>₹30 Cr DRDO electronic-warfare development contract</strong> independently of the parent.</p>
+    <p><span class="wl">Watch</span> The group's two ugliest disclosures both sit at UTS — the FY25 warehouse fire, and ₹5.15 Cr of unsecured related-party advances to UTS creditors.</p>
+  </div>
+
+  <div class="acq">
+    <div class="acq-head">
+      <h4>Zen Medical Technologies</h4>
+      <div class="acq-meta"><span class="chip"><b>100%</b></span><span class="chip">Sep 2020</span><span class="chip">—</span></div>
+    </div>
+    <p><span class="wl">What it brings</span> A combat-medical and casualty-simulation adjacency — the least explained deal in the portfolio, and the only one with no visible product line today. Marginally loss-making in FY25 (−₹2.2 lakh). Immaterial in size; off-thesis in direction.</p>
+  </div>
+
+  <div class="acq">
+    <div class="acq-head">
+      <h4>AiTuring Technologies</h4>
+      <div class="acq-meta"><span class="chip"><b>51% → 49%</b></span><span class="chip">Mar 2024</span><span class="chip">Pune</span></div>
+    </div>
+    <p><span class="wl">What it brings</span> AI-driven remote weapon stations — the capability behind the Barbarik-URCWS line, and the bridge between Zen's sensors and its effectors. The first deal of the current campaign.</p>
+    <p><span class="wl">Watch</span> Quietly reduced from 51% subsidiary to 49% associate in 2025 — capability retained, consolidation avoided. Nothing improper, but it is the one deal that has already been partially walked back.</p>
+  </div>
+
+  <div class="acq">
+    <div class="acq-head">
+      <h4>Applied Research International + ARI Labs — the flagship</h4>
+      <div class="acq-meta"><span class="chip"><b>76% → 100%</b></span><span class="chip">Feb → Oct 2025</span><span class="chip"><b>₹130.0 Cr</b></span><span class="chip">Delhi</span></div>
+    </div>
+    <p><span class="wl">What it brings</span> Everything Zen's organic business was not. Naval and maritime simulation, where Zen was land-only. <strong>121 proprietary IP assets</strong> feeding the IP-driven model. <strong>DNV Class A certification</strong> — an international quality passport no other group asset holds. DG Shipping e-governance — recurring government SaaS. And commercial customers in marine, ports, mining and construction — <strong>the only revenue in the group that does not depend on the MoD</strong>, and the only line with a frictionless export path.</p>
+    <p><span class="wl">Watch</span> Going from 76% to 100% within eight months is the tell — this is the platform, not a bet. It is also 72% of everything Zen has ever spent on M&amp;A: integration failure here is the only one that would genuinely matter.</p>
+  </div>
+
+  <div class="acq">
+    <div class="acq-head">
+      <h4>Vector Technics</h4>
+      <div class="acq-meta"><span class="chip"><b>51%</b></span><span class="chip">Feb 2025</span><span class="chip"><b>₹25.0 Cr</b></span></div>
+    </div>
+    <p><span class="wl">What it brings</span> Drone propulsion — motors and powertrains, the most import-dependent layer of the Indian drone stack. Scaled to <strong>300,000 units/year capacity by July 2026</strong>, with roughly half of enquiries from overseas. Vertical integration and import substitution in a single deal, and the second-largest cheque of the campaign.</p>
+    <p><span class="wl">Watch</span> Marginally loss-making in FY25 (−₹14.6 lakh) — capacity has arrived ahead of revenue.</p>
+  </div>
+
+  <div class="acq">
+    <div class="acq-head">
+      <h4>Bhairav Robotics</h4>
+      <div class="acq-meta"><span class="chip"><b>45.33%</b></span><span class="chip">Feb 2025</span><span class="chip"><b>₹3.99 Cr</b></span></div>
+    </div>
+    <p><span class="wl">What it brings</span> Unmanned ground vehicles and autonomy — the thread behind the Prahasta quadruped and the UGV line. An associate stake below control: this is an option on ground robotics, not a commitment to it, priced accordingly at under ₹4 Cr.</p>
+  </div>
+
+  <div class="acq">
+    <div class="acq-head">
+      <h4>TISA Aerospace</h4>
+      <div class="acq-meta"><span class="chip"><b>54.67%</b></span><span class="chip">Jun/Jul 2025</span><span class="chip"><b>₹6.6 Cr</b></span><span class="chip">Hyderabad</span></div>
+    </div>
+    <p><span class="wl">What it brings</span> Loitering munitions — Zen's first step from training and defensive systems into <strong>munitions, a consumable</strong>. A simulator is bought once per fifteen years; a loitering munition is expended and reordered. Small today, but it is a structurally different revenue physics from everything else in the group. Anister UAV unveiled June 2026.</p>
+  </div>
+
+  <div class="acq">
+    <div class="acq-head">
+      <h4>Anawave Systems &amp; Solutions</h4>
+      <div class="acq-meta"><span class="chip"><b>76%</b></span><span class="chip">Nov 2025</span><span class="chip"><b>₹7.00 Cr</b></span></div>
+    </div>
+    <p><span class="wl">What it brings</span> Naval scenario-based training content that plugs directly into ARI's platforms — a bolt-on to the flagship rather than a new direction. The most recent deal, and evidence the naval leg is being deliberately deepened rather than left as a one-off purchase.</p>
+  </div>
+
+  <h3>What the portfolio assembles — the strategic read</h3>
+  <ul class="tight">
+    <li><strong>A complete unmanned-warfare stack.</strong> Propulsion (Vector) → platform and munition (TISA) → ground autonomy (Bhairav) → the weapon station that mounts it (AiTuring) → the electronic warfare that defeats the other side's drones (Unistring plus the organic C-UAS line) → the simulators that train every operator in the chain. No other Indian company, listed or private, holds all of these layers under one roof.</li>
+    <li><strong>Multi-domain simulation.</strong> Land (organic) plus sea (ARI, Anawave) plus air (C295 flight simulator) — the precondition for bidding tri-service training programmes rather than Army-only tenders.</li>
+    <li><strong>A second, non-defence leg.</strong> ARI's commercial marine, ports and mining business plus DG Shipping e-governance is the group's only MoD-independent revenue — and its cleanest export wedge.</li>
+    <li><strong>The integration showcase.</strong> The Integrated Smart Border Suite is what the portfolio looks like fully assembled: sensors, counter-UAS, weapon stations and command-and-control sold as one border-security programme rather than as parts.</li>
+  </ul>
+
+  <div class="callout warn">
+    <div class="lbl">The craft, and its cost</div>
+    <p>Majority-but-not-full stakes keep founders motivated and prices nominal — six capability deals cost less than ₹50 Cr combined. But the costs are already visible: minority interests complicate consolidation, three subsidiaries lost money in FY25, the fire and the related-party advances sit at Unistring, and AiTuring has already been deconsolidated. Cheap options are cheap until you must exercise or abandon them. FY27–28 is when the portfolio has to show which tuck-ins were assets and which were distractions.</p>
+  </div>
+</section>
+
+<!-- 05 -->
+<section id="leadership">
+  <p class="eyebrow">06 · Leadership &amp; ownership</p>
+  <h2>Founder-controlled, family-anchored</h2>
+  <p>Zen remains under the control of its three co-founders, with a fourth family member on the board as a whole-time director. Notably, the entire senior technical and financial leadership has turned over inside the last twelve months.</p>
+
+  <div class="two">
+    <div class="card">
+      <h4>Promoters &amp; executive board</h4>
+      <ul class="tight">
+        <li><strong>Ashok Atluri</strong> — Chairman &amp; Managing Director, co-founder</li>
+        <li><strong>Kishore Dutt Atluri</strong> — President &amp; Joint Managing Director, co-founder (brother)</li>
+        <li><strong>Ravi Kumar Midathala</strong> — Whole-Time Director, co-founder</li>
+        <li><strong>Shilpa Choudari</strong> — Whole-Time Director</li>
+      </ul>
+      <h4>Independent directors</h4>
+      <ul class="tight">
+        <li>Dr Ajay Kumar Singh</li>
+        <li>Sanjay Vijay Singh Jesrani</li>
+        <li>Sirisha Chintapalli</li>
+        <li>Durga Prasad Kode — from 28 Mar 2025</li>
+        <li><strong>Uma Priyadarshini Kollareddy</strong> — from 4 Aug 2026</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Key management — a full refresh</h4>
+      <ul class="tight">
+        <li><strong>CTO — Dr Sreenivas Rao Yellamanchali</strong>, former DRDO Director General, appointed 2 May 2026</li>
+        <li><strong>CFO — Hari Haran Chalat</strong>, appointed by May 2026, succeeding Afzal Harunbhai Malkani (in post since 1 Aug 2022)</li>
+        <li><strong>Company Secretary — Sourav Dhar</strong>, from 2 Nov 2024, replacing M. Raghavendra Prasad</li>
+      </ul>
+      <h4>Shareholding — June 2026</h4>
+      <div class="twrap" style="margin-top:8px">
+        <table>
+          <thead><tr><th>Holder</th><th class="n">Stake</th></tr></thead>
+          <tbody>
+            <tr><td>Promoters</td><td class="n"><strong>48.51%</strong></td></tr>
+            <tr><td>Public</td><td class="n">28.65%</td></tr>
+            <tr><td>DIIs</td><td class="n">10.41%</td></tr>
+            <tr><td>FIIs</td><td class="n">6.46%</td></tr>
+            <tr><td>Others</td><td class="n">5.96%</td></tr>
+            <tr><td>Promoter pledging</td><td class="n">0.00%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="lbl">August 2024 QIP</div>
+    <p>Opened 21 August and allotted 23 August 2024. Raised <strong>₹1,000 Cr gross (₹979.51 Cr net)</strong> through 62,46,096 equity shares of ₹1 face value at <strong>₹1,601 per share</strong>. <strong>Subscribed over five times</strong>, with allotments to Kotak Mutual Fund, Motilal Oswal and White Oak Offshore. This capital funded the 2025 acquisition programme and remains substantially undeployed.</p>
+  </div>
+
+  <div class="callout warn">
+    <div class="lbl">Read this alongside the risk section</div>
+    <p>A CFO, a CTO and a company secretary all replaced within roughly eighteen months, in a company mid-way through integrating seven acquisitions, is a material execution consideration — whatever the individual merits of each appointment. The CTO hire in particular, a former DRDO Director General, signals a deliberate move to deepen technical leadership.</p>
+  </div>
+</section>
+
+<!-- 06 -->
+<section id="financials">
+  <p class="eyebrow">07 · Financial performance</p>
+  <h2>A four-year vertical, then a sharp reversal</h2>
+  <p>Revenue compounded from ₹70 Cr in FY22 to ₹974 Cr in FY25 — a fourteen-fold increase in three years — before falling 29% in FY26. What makes the decline interpretable is that margins did not follow it down.</p>
+
+  <div class="figure">
+    <p class="figtitle">Revenue and profit after tax, FY22–FY26</p>
+    <p class="figsub">Consolidated, ₹ crore. FY25 PAT adjusted for non-controlling interest; FY26 PAT adjusted.</p>
+    <div class="legend">
+      <span><i class="swatch" style="background:var(--series-1)"></i>Sales</span>
+      <span><i class="swatch" style="background:var(--series-2)"></i>PAT</span>
+    </div>
+    <div id="chart-rev"></div>
+  </div>
+
+  <div class="figure">
+    <p class="figtitle">EBITDA margin, FY22–FY26 and Q1 FY27</p>
+    <p class="figsub">Per cent. The FY26 expansion to 48.4% is the argument that the revenue decline is timing, not competitiveness.</p>
+    <div id="chart-margin"></div>
+  </div>
+
+  <div class="twrap">
+    <table>
+      <caption>Consolidated financials, ₹ crore unless stated</caption>
+      <thead><tr><th>Metric</th><th class="n">FY22</th><th class="n">FY23</th><th class="n">FY24</th><th class="n">FY25</th><th class="n">FY26</th><th class="n">Q1 FY27</th></tr></thead>
+      <tbody>
+        <tr><td>Sales</td><td class="n">69.75</td><td class="n">218.85</td><td class="n">439.85</td><td class="n">973.64</td><td class="n">687.69</td><td class="n">141.64</td></tr>
+        <tr><td>Total revenue</td><td class="n">75.13</td><td class="n">226.09</td><td class="n">454.77</td><td class="n">1,032.03</td><td class="n">773.11</td><td class="n">160.79</td></tr>
+        <tr><td>EBITDA</td><td class="n">9.95</td><td class="n">79.86</td><td class="n">195.71</td><td class="n">431.91</td><td class="n">332.66</td><td class="n">38.70</td></tr>
+        <tr><td>EBITDA margin</td><td class="n">14.26%</td><td class="n">36.49%</td><td class="n">44.49%</td><td class="n">44.36%</td><td class="n">48.37%</td><td class="n">27.40%</td></tr>
+        <tr><td>PAT</td><td class="n">2.61</td><td class="n">49.97</td><td class="n">129.50</td><td class="n">280.24</td><td class="n">193.45</td><td class="n">31.85</td></tr>
+        <tr><td>Gross margin</td><td class="n">~75%</td><td class="n">69.7%</td><td class="n">70.7%</td><td class="n">60.5%</td><td class="n">—</td><td class="n">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Quality of earnings is deteriorating faster than the P&amp;L suggests</h3>
+  <p>Three series tell a story the revenue line does not. Return on capital has fallen by two-thirds in two years, the working capital cycle has nearly doubled, and gross margin has compressed as lower-margin counter-drone hardware entered the mix.</p>
+
+  <div class="two">
+    <div class="figure">
+      <p class="figtitle">Return on capital employed</p>
+      <p class="figsub">Per cent. Partly the arithmetic of a ₹1,000 Cr capital raise landing on the denominator — but only partly.</p>
+      <div id="chart-roce"></div>
+    </div>
+    <div class="figure">
+      <p class="figtitle">Working capital cycle</p>
+      <p class="figsub">Days. Attributed to delayed government validation of complex smart border systems.</p>
+      <div id="chart-wc"></div>
+    </div>
+  </div>
+
+  <div class="twrap">
+    <table>
+      <caption>Balance sheet and return ratios</caption>
+      <thead><tr><th>Metric</th><th class="n">FY24</th><th class="n">FY25</th><th class="n">FY26</th></tr></thead>
+      <tbody>
+        <tr><td>ROCE</td><td class="n">46.00%</td><td class="n">23.63%</td><td class="n">16.00%</td></tr>
+        <tr><td>ROE</td><td class="n">28.51%</td><td class="n">16.48%</td><td class="n">17.24%</td></tr>
+        <tr><td>Debtor days</td><td class="n">153</td><td class="n">154</td><td class="n">119</td></tr>
+        <tr><td>Working capital days</td><td class="n">—</td><td class="n">283</td><td class="n">543</td></tr>
+        <tr><td>Net cash</td><td class="n">—</td><td class="n">—</td><td class="n">₹1,217 Cr</td></tr>
+        <tr><td>Debt / equity</td><td class="n">—</td><td class="n">—</td><td class="n">0.01</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <div class="lbl">How to read FY26</div>
+    <p>Management's case is that the decline is <strong>execution timing</strong>: most of the current order book was won from October 2025 onwards with roughly twelve-month execution cycles, so recognition lags. Flat-to-expanding gross and EBITDA margins support that reading — a competitive problem would show up in price. The counter-case is that revenue recognition is not the constraint; <strong>order intake is</strong>, and that is a demand-side problem no amount of execution fixes.</p>
+  </div>
+
+  <hr class="rule">
+
+  <p class="eyebrow">07b · Deep dive</p>
+  <h2>Product-line economics: the annuity is real, but it is not what the sell-side says it is</h2>
+  <p>Zen reports as a <strong>single segment</strong> — "Defence and Homeland" — and states explicitly in every filing that segmental reporting under Ind AS 108 is therefore not presented. There is no published simulator-versus-counter-drone revenue split anywhere, in any year. What <em>is</em> disclosed, under the Ind AS 115 disaggregation note, is the split between equipment sales and services. That is the only rigorous product-line cut available, and it turns out to be the more interesting one.</p>
+
+  <h3>The disaggregation nobody looks at</h3>
+  <p>Reconstructed from the Ind AS 115 note (FY19–FY22, via ICICI Securities' reproduction), disclosed AMC percentages (FY23–FY24) and the quarterly standalone highlights slide (FY25–FY26):</p>
+
+  <div class="twrap">
+    <table>
+      <caption>Equipment vs recurring revenue, ₹ crore. FY13–FY18 standalone; FY19 onward consolidated</caption>
+      <thead><tr><th>FY</th><th class="n">Total</th><th class="n">Equipment</th><th class="n">AMC / services</th><th class="n">AMC share</th><th>Basis</th></tr></thead>
+      <tbody>
+        <tr><td>FY19</td><td class="n">92.2</td><td class="n">69.9</td><td class="n">22.3</td><td class="n">24.2%</td><td>Disclosed</td></tr>
+        <tr><td>FY20</td><td class="n">148.9</td><td class="n">129.4</td><td class="n">19.5</td><td class="n">13.1%</td><td>Disclosed</td></tr>
+        <tr><td>FY21</td><td class="n">54.6</td><td class="n">35.6</td><td class="n">19.0</td><td class="n">34.8%</td><td>Disclosed</td></tr>
+        <tr><td>FY22</td><td class="n">69.8</td><td class="n">36.7</td><td class="n">33.1</td><td class="n">47.5%</td><td>Disclosed</td></tr>
+        <tr><td>FY23</td><td class="n">218.9</td><td class="n">182.9</td><td class="n">35.9</td><td class="n">16.4%</td><td>Disclosed</td></tr>
+        <tr><td>FY24</td><td class="n">439.9</td><td class="n">406.7</td><td class="n">33.2</td><td class="n">7.5%</td><td>Disclosed</td></tr>
+        <tr><td>FY25</td><td class="n">973.6</td><td class="n">933.6</td><td class="n">~40.0</td><td class="n">4.1%</td><td>Est. from quarterly</td></tr>
+        <tr><td>FY26</td><td class="n">687.7</td><td class="n">647.7</td><td class="n">~40.0</td><td class="n">5.8%</td><td>Est. from quarterly</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout crit">
+    <div class="lbl">The anomaly</div>
+    <p>Indexed to FY19, equipment revenue reached <strong>1,335</strong> by FY25. Recurring revenue reached <strong>179</strong>. AMC revenue has been effectively <strong>flat at ₹33–40 Cr for four consecutive years</strong> while the equipment business it is supposed to be a function of expanded thirteen-fold. Any model in which AMC compounds with the installed base is contradicted by the actual numbers. Something has to explain that.</p>
+  </div>
+
+  <h3>An installed-base cohort model, fitted to the observed series</h3>
+  <p>The mechanic is a lag. Equipment sold in year <em>t</em> earns nothing recurring until warranty expires, then pays an annual fee until the platform is retired. Formally, recurring revenue in year <em>Y</em> is the attach rate <em>r</em> applied to the original value of all kit inside its AMC window:</p>
+
+  <div class="callout">
+    <div class="lbl">Model</div>
+    <p style="font-family:var(--mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:13.5px">AMC(Y) &nbsp;=&nbsp; r &nbsp;×&nbsp; Σ&nbsp;Equipment(t) &nbsp;&nbsp;for&nbsp; t&nbsp;∈&nbsp;[Y−L, Y−w]</p>
+    <p style="margin-bottom:0">where <strong>w</strong> is the warranty lag, <strong>L</strong> the economic life, and <strong>r</strong> the annual attach rate as a share of original equipment value. Fitting <em>r</em> in closed form for each (L, w) pair and grid-searching L ∈ [6,20], w ∈ {1,2,3} against observed FY23–FY26 AMC revenue gives a unique minimum.</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="k">Economic life (L)</div><div class="v">10 years</div><div class="d">Matches Atluri's own figure</div></div>
+    <div class="stat"><div class="k">Warranty lag (w)</div><div class="v">3 years</div><div class="d">AMC begins year 4</div></div>
+    <div class="stat"><div class="k">Attach rate (r)</div><div class="v">7.8%</div><div class="d">of original equipment value p.a.</div></div>
+    <div class="stat pos"><div class="k">Fit quality</div><div class="v">±₹3.5 Cr</div><div class="d">RMSE on a ₹37 Cr mean</div></div>
+  </div>
+
+  <p>The fit is stable. <strong>L = 10 years is recovered in every variant</strong> of the FY13–FY15 service-share assumption (10% through 40%) and in three of four leave-one-out tests; the attach rate moves only between 7.7% and 8.1%. The backtest reproduces the flat AMC line to within 10% in every year, which no 10%-attach model does:</p>
+
+  <div class="twrap">
+    <table>
+      <caption>Backtest — predicted AMC revenue vs actual, ₹ crore</caption>
+      <thead><tr><th>FY</th><th class="n">Actual</th><th class="n">Broker case<br><span style="font-weight:400;font-size:11px">L=15, w=3, r=10%</span></th><th class="n">Management case<br><span style="font-weight:400;font-size:11px">L=10, w=3, r=10%</span></th><th class="n">Fitted<br><span style="font-weight:400;font-size:11px">L=10, w=3, r=7.8%</span></th></tr></thead>
+      <tbody>
+        <tr><td>FY23</td><td class="n">35.9</td><td class="n">43.9 <span style="color:var(--critical)">1.2×</span></td><td class="n">43.9 <span style="color:var(--critical)">1.2×</span></td><td class="n"><strong>34.3</strong> <span style="color:var(--good)">1.0×</span></td></tr>
+        <tr><td>FY24</td><td class="n">33.2</td><td class="n">47.5 <span style="color:var(--critical)">1.4×</span></td><td class="n">44.5 <span style="color:var(--critical)">1.3×</span></td><td class="n"><strong>34.8</strong> <span style="color:var(--good)">1.0×</span></td></tr>
+        <tr><td>FY25</td><td class="n">40.0</td><td class="n">51.1 <span style="color:var(--critical)">1.3×</span></td><td class="n">44.4 <span style="color:var(--critical)">1.1×</span></td><td class="n"><strong>34.7</strong> <span style="color:var(--good)">0.9×</span></td></tr>
+        <tr><td>FY26</td><td class="n">40.0</td><td class="n">69.4 <span style="color:var(--critical)">1.7×</span></td><td class="n">56.5 <span style="color:var(--critical)">1.4×</span></td><td class="n"><strong>44.1</strong> <span style="color:var(--good)">1.1×</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p><strong>The flat line is now explained.</strong> The AMC-eligible installed base was itself flat — ₹439 Cr, ₹445 Cr, ₹444 Cr across FY23–FY25 — because the small cohorts of FY13–FY16 were rolling off the back exactly as the FY20–FY22 cohorts matured onto the front. The base did not grow, so the annuity did not grow. The FY23–FY26 equipment boom has not entered the window yet.</p>
+
+  <div class="figure">
+    <p class="figtitle">AMC-eligible installed base and recurring revenue, FY23–FY31</p>
+    <p class="figsub">Bars: original value of equipment inside its AMC window (₹ Cr, left). Line: recurring revenue (₹ Cr, right) — solid actual, dashed modelled at the fitted 7.8% attach rate. <strong>Equipment sales are set to zero from FY27 onward.</strong></p>
+    <div class="legend">
+      <span><i class="swatch" style="background:var(--series-1)"></i>Eligible installed base</span>
+      <span><i class="swatch" style="background:var(--series-2)"></i>AMC revenue</span>
+    </div>
+    <div id="chart-amcbase"></div>
+  </div>
+
+  <h3>The 120% figure is wrong, and it is wrong in a specific way</h3>
+  <p>The claim that AMCs return ~120% of original equipment value over a platform's life is repeated in HDFC Securities' and ICICI Securities' notes and has propagated widely. <strong>It does not appear in any Zen filing, presentation, annual report or earnings transcript.</strong> It is a broker construct, and it is circular: 120% is precisely the identity (15 − 3) × 10%, which is to say it is the other three assumptions multiplied together rather than an independent observation. It is also internally inconsistent in ICICI's own note, which states a ten-year lifespan alongside it — on their own arithmetic that gives 70%, not 120%.</p>
+
+  <div class="twrap">
+    <table>
+      <caption>Lifetime recurring revenue as % of original equipment value</caption>
+      <thead><tr><th>Life</th><th>Lag</th><th class="n">Attach</th><th class="n">Lifetime %</th><th>Provenance</th></tr></thead>
+      <tbody>
+        <tr><td>15y</td><td>3y</td><td class="n">10.0%</td><td class="n">120%</td><td>HDFC / ICICI — the only corner that yields 120%</td></tr>
+        <tr><td>10y</td><td>3y</td><td class="n">10.0%</td><td class="n">70%</td><td>ICICI's own stated lifespan, their own attach rate</td></tr>
+        <tr><td><strong>10y</strong></td><td><strong>3y</strong></td><td class="n"><strong>7.8%</strong></td><td class="n"><strong>63%</strong></td><td><strong>Fitted to eight years of observed revenue</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>The annuity is real and it is valuable. It is worth roughly <strong>63% of the equipment sale, not 120%</strong> — a little over half what the consensus carries. On a ₹1,000 Cr equipment cohort that is a ₹370 Cr difference in lifetime revenue.</p>
+
+  <div class="callout">
+    <div class="lbl">Independent corroboration</div>
+    <p>The fitted attach rate can be checked against a completely separate dataset — the balance sheet rather than the P&amp;L. Zen's AMC order book stood at <strong>₹318.43 Cr</strong> at 30 June 2026, and its two publicly disclosed AMC awards (₹55 Cr in Apr 2022, ₹46 Cr in Oct 2024) are both explicitly <strong>five-year blocks</strong>. That implies a contracted run-rate of ₹63.7 Cr/yr, which against the FY27 eligible base of ₹929 Cr implies an attach rate of <strong>6.86%</strong>. Fitted from revenue history: <strong>7.82%</strong>. Two independent derivations, one point apart. The model holds.</p>
+  </div>
+
+  <h3>The annuity wave is already in the ground</h3>
+  <p>This is the finding that matters. The FY24–FY26 equipment cohorts — ₹407 Cr, ₹934 Cr, ₹648 Cr — begin paying AMC in FY27, FY28 and FY29 respectively. The eligible base goes from ₹565 Cr today to <strong>₹2,443 Cr by FY29</strong>. Recurring revenue follows it mechanically, <em>with no new equipment orders whatsoever</em>:</p>
+
+  <div class="figure">
+    <p class="figtitle">Projected recurring revenue, FY26–FY31, on zero new equipment sales</p>
+    <p class="figsub">₹ crore. Three parameterisations. Every rupee is generated by kit Zen has already installed and been paid for.</p>
+    <div class="legend">
+      <span><i class="swatch" style="background:var(--series-3)"></i>Broker case (L=15, r=10%)</span>
+      <span><i class="swatch" style="background:var(--series-2)"></i>Management case (L=10, r=10%)</span>
+      <span><i class="swatch" style="background:var(--series-1)"></i>Fitted (L=10, r=7.8%)</span>
+    </div>
+    <div id="chart-amcproj"></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="k">FY26 AMC</div><div class="v">₹40 Cr</div><div class="d">Covers 11% of opex base</div></div>
+    <div class="stat"><div class="k">FY27 modelled</div><div class="v">₹73 Cr</div><div class="d">+82% on fitted case</div></div>
+    <div class="stat"><div class="k">FY29 modelled</div><div class="v">₹191 Cr</div><div class="d">4.8× FY26</div></div>
+    <div class="stat pos"><div class="k">FY29 opex coverage</div><div class="v">54%</div><div class="d">vs 11% today</div></div>
+  </div>
+
+  <p>Management's stated purpose for the AMC book is explicit — from the Q4 FY25 deck, <em>"scale the AMC business, where the contributions from AMC can take care of the fixed operating expenses."</em> Against an FY26 operating cost base of ₹355 Cr, recurring revenue currently covers 11% of it. On the fitted model it covers <strong>54% by FY29</strong> without a single new order. That is the difference between a lumpy tender business and a business with a floor.</p>
+
+  <div class="callout warn">
+    <div class="lbl">Where this breaks — and it is not a small caveat</div>
+    <p>The projection above is a <strong>potential</strong> annuity, not a contracted one. AMCs are signed as discrete five-year blocks with a government counterparty and re-tendered at expiry — a ten-year life therefore requires <strong>two sequential renewal events</strong>, not one continuous contract. Zen has never disclosed a renewal rate, churn figure or attrition assumption in any filing, transcript, presentation or rating rationale. At 30 June 2026 only ₹318 Cr of the modelled stream is actually under contract. Everything beyond FY28 in the chart above depends on renewals that no public data supports or refutes.</p>
+    <p style="margin-bottom:0">The second exposure is <strong>mix</strong>. The FY24–FY26 cohorts are heavily counter-drone rather than simulator — anti-drone was ₹504 Cr of the 31 Mar 2025 order book against ₹188 Cr of training simulators. Counter-UAS is a faster-obsolescing category in an active electronic-warfare contest; a ten-year economic life calibrated on tank and small-arms simulators may not survive contact with drone-defeat hardware, where the threat re-specifies every eighteen months. If effective life on that cohort is six years rather than ten, the FY29 figure falls by roughly a third.</p>
+  </div>
+
+  <div class="callout">
+    <div class="lbl">What this changes about the investment case</div>
+    <p>Three things. First, the ₹44.6 Cr Q1 intake print is <strong>less catastrophic than it reads</strong> — a mechanically rising annuity from already-installed kit lands across exactly the period the intake collapse would otherwise hollow out. Second, the consensus annuity value is <strong>roughly half</strong> what the sell-side carries, so a DCF built on the 120% figure is materially overstating terminal value. Third, and most usefully, this is the one part of Zen's revenue that is <strong>predictable from public data</strong> — which makes AMC realisation against the modelled path the cleanest available test of whether management's execution-timing explanation for FY26 is true.</p>
+  </div>
+</section>
+
+<!-- 07 -->
+<section id="orderbook">
+  <p class="eyebrow">08 · Order book, pipeline &amp; contracts</p>
+  <h2>₹1,239 crore, and a ₹1,261 crore gap to guidance</h2>
+  <p>The backlog stood at <strong>₹1,239.02 Cr as of 30 June 2026</strong>, down from ₹1,336 Cr three months earlier. Management guides to ₹2,500 Cr by the end of FY27. Q1 delivered ₹44.62 Cr of new orders.</p>
+
+  <div class="figure">
+    <p class="figtitle">Order book composition, 30 June 2026</p>
+    <p class="figsub">₹ crore. Two independent cuts of the same ₹1,239.02 Cr backlog.</p>
+    <div class="legend">
+      <span><i class="swatch" style="background:var(--series-1)"></i>Equipment / Domestic</span>
+      <span><i class="swatch" style="background:var(--series-3)"></i>AMC / Export</span>
+    </div>
+    <div id="chart-ob"></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="k">Equipment</div><div class="v">₹920.6 Cr</div><div class="d">74.3%</div></div>
+    <div class="stat"><div class="k">AMC</div><div class="v">₹318.4 Cr</div><div class="d">25.7%</div></div>
+    <div class="stat"><div class="k">Domestic</div><div class="v">₹1,153.8 Cr</div><div class="d">93.1%</div></div>
+    <div class="stat neg"><div class="k">Exports</div><div class="v">₹85.3 Cr</div><div class="d">6.9%</div></div>
+  </div>
+
+  <h3>Guidance</h3>
+  <ul class="tight">
+    <li>Cumulative execution of <strong>₹4,000 Cr across FY27 and FY28</strong></li>
+    <li>Unexecuted order book to reach <strong>₹2,500 Cr by end-FY27</strong></li>
+    <li>Long-term operating targets of <strong>35% EBITDA margin and 25% PAT margin</strong> — both below where FY26 landed, implying management expects normalisation downward</li>
+  </ul>
+
+  <div class="twrap">
+    <table>
+      <caption>Major contract wins, FY26 and FY27 to date</caption>
+      <thead><tr><th>Date</th><th>Customer</th><th>Scope</th><th class="n">Value</th></tr></thead>
+      <tbody>
+        <tr><td>Nov 2025</td><td>Ministry of Defence</td><td>Rapid Anti-Drone System upgrades</td><td class="n"><strong>₹289.00 Cr</strong></td></tr>
+        <tr><td>Nov 2025</td><td>Ministry of Defence</td><td>Specialised tank simulators</td><td class="n">₹108.00 Cr</td></tr>
+        <tr><td>Dec 2025</td><td>Ministry of Defence</td><td>India's first Combat Training Node (CTN) at Mhow</td><td class="n">₹120.00 Cr <span style="color:var(--text-muted)">incl GST</span></td></tr>
+        <tr><td>Jul 2026</td><td>Ministry of Defence</td><td>Upgradation and integration of Tank and Crew Gunnery Simulators, one-year execution</td><td class="n"><strong>₹177.50 Cr</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout crit">
+    <div class="lbl">The arithmetic nobody should skip</div>
+    <p>To hit ₹2,500 Cr of backlog by March 2027 from ₹1,239 Cr in June 2026, while simultaneously executing revenue out of that book, Zen needs order inflow of roughly <strong>₹2,000 Cr or more across three quarters</strong>. Q1 delivered ₹44.6 Cr. The ₹177.5 Cr July award helps. Management itself acknowledged there had been <strong>no recent tenders</strong> for anti-drone systems or simulators. This is the single number on which the guidance stands or falls.</p>
+  </div>
+</section>
+
+<!-- 08 -->
+<section id="competition">
+  <p class="eyebrow">09 · Competitive landscape &amp; moat</p>
+  <h2>Protected at home, unproven abroad</h2>
+
+  <div class="twrap">
+    <table>
+      <caption>Who Zen actually competes against</caption>
+      <thead><tr><th>Arena</th><th>Domestic competitors</th><th>Global competitors</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Simulators</strong></td><td>Bharat Electronics (dedicated simulator SBU), Tecknotrove Systems (won Agniveer simulator contracts), Thales and BAE Systems via partnerships and DPSU relationships</td><td>BAE, CAE, Cubic, Lockheed Martin, Northrop Grumman, SAAB, Rheinmetall, Bohemia Interactive</td></tr>
+        <tr><td><strong>Counter-UAS</strong></td><td>BEL (won IAF and Navy contracts), Adani Defence (Elbit JV), Gurutvaa Systems, Grene Robotics (Indrajaal AI platform), M2K Technologies (DroneShield partner), Big Bang Boom Solutions (₹2bn MoD contract)</td><td>DroneShield, Lockheed, Raytheon</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Against listed Indian defence peers</h3>
+  <div class="twrap">
+    <table>
+      <caption>Growth comparison, FY23–FY26E CAGR</caption>
+      <thead><tr><th>Company</th><th class="n">Revenue CAGR</th><th class="n">EBITDA CAGR</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Zen Technologies</strong></td><td class="n"><strong>83.2%</strong></td><td class="n"><strong>89.3%</strong></td></tr>
+        <tr><td>Azad Engineering</td><td class="n">33.7%</td><td class="n">43.2%</td></tr>
+        <tr><td>Data Patterns</td><td class="n">27.5%</td><td class="n">31.2%</td></tr>
+        <tr><td>MTAR Technologies</td><td class="n">22.4%</td><td class="n">—</td></tr>
+        <tr><td>Astra Microwave</td><td class="n">12.1%</td><td class="n">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>Valuation.</strong> Zen trades at a trailing P/E of <strong>82–86×</strong> against a sector range of 50–100×, and roughly <strong>35× two-year forward EV/EBITDA</strong>. Its one-year forward P/E of 48.7× is below Data Patterns' 79.5×, but that comparison flatters Zen only if the forward earnings arrive.</p>
+
+  <h3>The moat, component by component</h3>
+  <div class="tvrap twrap">
+    <table>
+      <thead><tr><th>Element</th><th>What it does</th><th>Durability</th></tr></thead>
+      <tbody>
+        <tr><td><strong>100% owned IP</strong></td><td>Self-financed R&amp;D; 85+ granted global patents wholly owned, versus DRDO-funded shared IP at peers</td><td>Moderate-to-high</td></tr>
+        <tr><td><strong>AMC annuity</strong></td><td>Non-cyclical recurring revenue from year four, ~63% of sale value over a fitted 10-year life; covers 11% of opex today, ~54% by FY29 on already-installed kit</td><td><strong>High</strong>, but renewal-dependent — five-year blocks, no disclosed renewal rate</td></tr>
+        <tr><td><strong>Asset-light operations</strong></td><td>~400 outsourced vendors shield from fixed-asset overheads and raw material spikes</td><td>High</td></tr>
+        <tr><td><strong>Buy Indian-IDDM protection</strong></td><td>Procurement rules bar foreign primes from bidding on domestic land simulator and C-UAS tenders</td><td>High domestically; zero abroad</td></tr>
+        <tr><td><strong>Installed base</strong></td><td>1,000+ systems at 100+ customers creates switching costs and an AMC tail</td><td>High</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout warn">
+    <div class="lbl">The moat's blind spot</div>
+    <p>Three of the five moat elements are domestic-regulatory or annuity-based. None of them travels. In export markets Zen competes head-on with CAE, Rheinmetall, Bohemia and DroneShield without IDDM protection, without an installed base, and — per the SCOMET and domestic-priority constraints — with a structural delivery disadvantage. Exports were ~38% of FY25 turnover but are <strong>6.9% of the current order book</strong>. That is the moat's edge made visible.</p>
+  </div>
+</section>
+
+<!-- 09 -->
+<section id="risks">
+  <p class="eyebrow">10 · Risks &amp; red flags</p>
+  <h2>The unsoftened version</h2>
+  <p>Ordered by how much each could damage the equity, not by how likely it is.</p>
+
+  <div class="risk sev-critical">
+    <h4>Order intake has collapsed <span class="sev">Critical</span></h4>
+    <p>Government prioritisation of emergency procurement after Operation Sindoor delayed regular tenders through FY26, producing muted revenue and a subsequent <strong>~50% stock correction</strong>. Q1 FY27 fresh inflow was <strong>₹44.62 Cr</strong> against a ₹2,500 Cr year-end backlog target. Management has acknowledged there were no recent tenders for either anti-drone systems or simulators. Execution capacity is not the bottleneck; demand conversion is.</p>
+  </div>
+
+  <div class="risk sev-critical">
+    <h4>Extreme customer concentration <span class="sev">Critical</span></h4>
+    <p>The Government of India and MoD control the bulk of revenue. <strong>63.77% of FY25 consolidated revenue came from just three customers</strong>, up from 61.51% in FY24 — concentration is increasing, not diversifying. A single procurement policy shift, budget reallocation or programme deferral moves the entire P&amp;L.</p>
+  </div>
+
+  <div class="risk sev-serious">
+    <h4>Working capital has nearly doubled <span class="sev">Serious</span></h4>
+    <p>Working capital days went from <strong>283 to 543 as of March 2026</strong>, attributed to delayed government validation of complex smart border systems. Receivables climbed to <strong>₹410 Cr in FY25</strong>. For a business with 73% gross margins this is not a pricing problem — it is cash conversion, and it means reported profit is increasingly not cash.</p>
+  </div>
+
+  <div class="risk sev-serious">
+    <h4>Seven acquisitions, under 400 employees <span class="sev">Serious</span></h4>
+    <p>Unistring, AiTuring, ARIPL, ARI Labs, Vector Technics, Bhairav Robotics and Anawave create coordination bottlenecks in an organisation that does not have the headcount to absorb them. Concrete evidence rather than theory: a <strong>UTS warehouse fire</strong>, and loss-making subsidiaries in FY25 — <strong>Zen USA −₹434.71 lakh</strong>, Vector Technics −₹14.59 lakh, Zen Medical −₹2.22 lakh. Several holdings are majority-but-not-wholly-owned, which complicates control and consolidation alike.</p>
+  </div>
+
+  <div class="risk sev-serious">
+    <h4>Valuation leaves no room <span class="sev">Serious</span></h4>
+    <p>82–86× trailing earnings on a company whose revenue just fell 29%, whose ROCE fell from 46% to 16% in two years, and whose order intake is running at roughly 2% of the annual target rate. The multiple is defensible only on the assumption that FY26 was a timing artefact and FY27–28 delivers ₹4,000 Cr. Any slippage is repriced violently — as the 50% drawdown already demonstrated.</p>
+  </div>
+
+  <div class="risk sev-warning">
+    <h4>Competition is intensifying from both directions <span class="sev">Warning</span></h4>
+    <p>DRDO is actively transferring anti-drone technology to multiple competing players, structurally eroding the technical lead Zen built from 2018. Meanwhile agile startups — Grene Robotics, Big Bang Boom Solutions — are winning counter-drone tenders. Counter-UAS is also the lower-margin part of the mix: gross margin fell from ~75% in FY22 to 60.5% in FY25 partly on that shift.</p>
+  </div>
+
+  <div class="risk sev-warning">
+    <h4>Governance items to keep in view <span class="sev">Warning</span></h4>
+    <p>The promoter group <strong>sold 20 lakh shares in December 2023 for ₹145 Cr</strong>. Unsecured related-party advances to UTS creditors stood at <strong>₹5.15 Cr in FY25</strong>. On the other side of the ledger, promoter pledging is <strong>zero</strong> and the board added an independent director with capital-markets and strategic-investment expertise in August 2026. None of this is disqualifying; all of it belongs on a monitoring list.</p>
+  </div>
+
+  <div class="risk sev-warning">
+    <h4>The export story is aspiration, not backlog <span class="sev">Warning</span></h4>
+    <p>Exports were ~38% of FY25 turnover but are <strong>6.9% of the current order book</strong>. The US ambition — $100M within three years against a ~$10bn addressable market — depends on ITAR clearances and prime-vendor partnerships rather than direct bidding, in a market management itself describes as very closed and very difficult. Structural constraints (SCOMET licensing; domestic orders holding legal priority over exports) compound it.</p>
+  </div>
+
+  <div class="callout">
+    <div class="lbl">What would change the picture</div>
+    <p>Two things, in order. First, <strong>order inflow reverting to ₹500 Cr+ per quarter</strong> — that alone resolves the guidance gap and most of the valuation question. Second, <strong>working capital days retracing toward 300</strong>, which would confirm the 543-day figure was a government-validation timing artefact rather than a structural change in how Zen gets paid. Watch the 10 August investor meet and the 29 August AGM for both.</p>
+  </div>
+</section>
+
+<!-- 10 -->
+<section id="recent">
+  <p class="eyebrow">11 · Recent developments</p>
+  <h2>2026 in review</h2>
+  <div class="tl">
+    <div class="tl-item"><div class="tl-y">31 Jan 2026</div><div class="tl-t">Hari Haran Chalat takes over as <b>CFO</b>; Ashok and Kishore Atluri reappointed as CMD and Joint MD</div></div>
+    <div class="tl-item major"><div class="tl-y">2 May 2026</div><div class="tl-t"><b>Dr Sreenivas Rao Yellamanchali</b>, former DRDO Director General, appointed <b>CTO</b></div></div>
+    <div class="tl-item major"><div class="tl-y">8 May 2026</div><div class="tl-t">Launch of an <b>AI-powered fully integrated anti-drone system</b> — &gt;100 simultaneous drone tracks, &gt;15 km detection, 70 MHz–12 GHz coverage, RF and GNSS jamming, integration with RCWS and air defence guns. Timed to the Operation Sindoor anniversary.</div></div>
+    <div class="tl-item"><div class="tl-y">27 May 2026</div><div class="tl-t">India's first <b>Integrated Smart Border Suite (ISBS)</b> — multi-agency sensor fusion for the Army, BSF and state police</div></div>
+    <div class="tl-item"><div class="tl-y">Jul 2026</div><div class="tl-t">Vector Technics reaches <b>300,000 units/year</b> drone-propulsion capacity · high-altitude man-portable anti-drone system unveiled on Kargil Vijay Diwas (26 Jul)</div></div>
+    <div class="tl-item major"><div class="tl-y">22 Jul 2026</div><div class="tl-t">₹177.50 Cr MoD order for tank and crew gunnery simulator upgrades</div></div>
+    <div class="tl-item"><div class="tl-y">27 Jul 2026</div><div class="tl-t"><b>Q1 FY27 results</b> — revenue ₹141.6 Cr (−10.4% YoY), EBITDA margin 27.4%, order inflow ₹44.6 Cr</div></div>
+    <div class="tl-item"><div class="tl-y">4 Aug 2026</div><div class="tl-t"><b>Uma Priyadarshini Kollareddy</b> appointed independent director, explicitly for strategic oversight and expertise in international investments and technology initiatives</div></div>
+    <div class="tl-item"><div class="tl-y">10 &amp; 29 Aug 2026</div><div class="tl-t">Mumbai investor meet · Annual General Meeting (dividend record date 21 Aug)</div></div>
+  </div>
+</section>
+
+<!-- 12strat -->
+<section id="strategy">
+  <p class="eyebrow">12 · Strategic direction</p>
+  <h2>Where the evidence says this is going</h2>
+  <p>Each argument below is built in <strong>PEEL</strong> form — <strong>P</strong>oint, <strong>E</strong>vidence, <strong>E</strong>xplanation, <strong>L</strong>ink — so the claim, the facts behind it, the reasoning, and the forward implication stay separable. Everything in the Evidence rows is reported fact drawn from the sections above. The Points, Explanations and Links are inference, and should be read as such.</p>
+
+  <div class="peel">
+    <div class="peel-head"><span class="pnum">PEEL 1</span><h3>From simulator vendor to autonomous-battlefield mini-prime</h3></div>
+    <div class="peel-row"><div class="ptag tag-p">P</div><div><span class="plab">Point</span>
+      <p>Zen is deliberately repositioning from a training-simulator specialist into an integrated defence-electronics prime for unmanned warfare — selling programmes, not products.</p>
+    </div></div>
+    <div class="peel-row"><div class="ptag tag-e">E</div><div><span class="plab">Evidence</span>
+      <ul>
+        <li>Six acquisitions in eighteen months (Mar 2024 – Nov 2025) assemble a complete unmanned-warfare stack: propulsion, platforms and munitions, ground autonomy, AI weapon stations, electronic warfare, naval simulation.</li>
+        <li>The 2026 product cadence is integration-led: the AI-powered anti-drone system with interceptor and weapon-platform integration (8 May), the Integrated Smart Border Suite fusing multi-agency sensors for Army, BSF and state police (27 May), the high-altitude man-portable system (26 Jul).</li>
+        <li>Investor materials now lead with five capabilities, not simulators. The largest recent order is a system, not a simulator — ₹289 Cr for anti-drone upgrades (Nov 2025) against ₹108–178 Cr simulator awards.</li>
+        <li>The CTO hired in May 2026 is a former DRDO Director General — a systems-programme appointment, not a product one.</li>
+        <li>Management's own long-term guidance is 35% EBITDA / 25% PAT — <em>below</em> FY26's 48.4% / 28%.</li>
+      </ul>
+    </div></div>
+    <div class="peel-row"><div class="ptag tag-x">E</div><div><span class="plab">Explanation</span>
+      <p>Training alone is a bounded market in which Zen already holds ~80–90% of the Army's installed base — growth there is capped at the budget's growth. Integrated programmes are an order of magnitude larger per contract, and Zen is the only Indian company holding the trainer, the sensor, the effector and the munition in one group. But integration adds hardware revenue at lower gross margin — which is exactly why management guides margins <em>down</em>. The margin guidance is the strategy, stated in numbers: they are telling you the future mix before it arrives.</p>
+    </div></div>
+    <div class="peel-row"><div class="ptag tag-l">L</div><div><span class="plab">Link</span>
+      <p>Expect Zen to bid as prime on programme-scale tenders — border security, integrated counter-UAS networks — through FY27–28. The ₹2,500 Cr backlog target implicitly assumes at least one programme-scale win, and the P&amp;L will progressively look more like a defence-electronics company than a software house.</p>
+    </div></div>
+  </div>
+
+  <div class="peel">
+    <div class="peel-head"><span class="pnum">PEEL 2</span><h3>The ₹1,217 crore war chest is loaded, not parked</h3></div>
+    <div class="peel-row"><div class="ptag tag-p">P</div><div><span class="plab">Point</span>
+      <p>The balance sheet is positioned for at least one more major acquisition and for the working-capital burden of prime-scale contracts. The cash is a weapon, not a comfort blanket.</p>
+    </div></div>
+    <div class="peel-row"><div class="ptag tag-e">E</div><div><span class="plab">Evidence</span>
+      <ul>
+        <li>₹1,217 Cr net cash, debt-free (D/E 0.01). The August 2024 QIP raised ₹979.5 Cr net at ₹1,601/share, subscribed 5× by Kotak MF, Motilal Oswal and White Oak.</li>
+        <li>Total disclosed M&amp;A spend since: roughly ₹180 Cr. QIP monitoring-agency reports were still being filed in August 2026 — the proceeds are not fully deployed.</li>
+        <li>Management told the Q1 FY27 call it is actively evaluating "very interesting companies" with "huge revenue potential".</li>
+        <li>Working capital days doubled to 543; receivables reached ₹410 Cr in FY25.</li>
+        <li>Atluri's stated policy: hold enough to survive "two to three years even if there is zero business" — perhaps ₹300–400 Cr at the current cost base.</li>
+      </ul>
+    </div></div>
+    <div class="peel-row"><div class="ptag tag-x">E</div><div><span class="plab">Explanation</span>
+      <p>Institutional capital was raised for deployment, and the ₹800 Cr gap between what was raised and what has been spent is intent with a balance sheet behind it. Simultaneously, the pivot to prime contracts is cash-hungry: government validation cycles on complex systems — the stated cause of the 543 days — mean Zen finances the state's procurement pipeline from its own balance sheet. The cash is doing two jobs at once, and both are consequences of the same strategy.</p>
+    </div></div>
+    <div class="peel-row"><div class="ptag tag-l">L</div><div><span class="plab">Link</span>
+      <p>The evidence points to another ARI-scale (₹100–300 Cr) acquisition within 12–18 months, most plausibly filling the remaining stack gaps — seekers and optics, secure communications, or an export-market beachhead. If instead cash keeps compounding while intake stays weak, expect institutional pressure for buybacks or dividends by FY28.</p>
+    </div></div>
+  </div>
+
+  <div class="peel">
+    <div class="peel-head"><span class="pnum">PEEL 3</span><h3>Policy is converging on the company Zen already is</h3></div>
+    <div class="peel-row"><div class="ptag tag-p">P</div><div><span class="plab">Point</span>
+      <p>The political and regulatory environment is moving decisively in Zen's favour — and the FY26 order drought was most plausibly a policy artefact, not a demand collapse.</p>
+    </div></div>
+    <div class="peel-row"><div class="ptag tag-e">E</div><div><span class="plab">Evidence</span>
+      <ul>
+        <li>The FY2026-27 defence budget — the first after Operation Sindoor — rose 15% to ₹7.85 lakh Cr, with capital outlay up 21.8%.</li>
+        <li>On 3 July 2026 the Defence Acquisition Council cleared ~₹52,000 Cr of Acceptances of Necessity, including AKASH TARANG, an anti-UAV electronic-warfare system for the Army.</li>
+        <li>Draft DAP 2026 (February 2026) shifts procurement weight from where a thing is made to <strong>who owns the design rights, source code and upgrade authority</strong>, formalises spiral development, and makes exportability a baseline qualitative requirement.</li>
+        <li>Buy Indian-IDDM rules already bar foreign primes from Zen's domestic tenders; the ETAI trustworthy-AI framework (October 2024) creates an assurance regime with DRDO as implementer.</li>
+        <li>Post-Sindoor emergency procurement diverted regular tenders through FY26 — management's stated cause of the intake collapse. Zen's launch dates (Sindoor anniversary, Kargil Vijay Diwas) and the high-altitude system aimed at mountain-frontier requirements show a company courting the political moment deliberately.</li>
+      </ul>
+    </div></div>
+    <div class="peel-row"><div class="ptag tag-x">E</div><div><span class="plab">Explanation</span>
+      <p>Zen is the rare listed company whose business model predates the policy that now rewards it: 100% owned IP, self-funded R&amp;D, source code in-house, manufacturing outsourced. Emergency procurement is by nature a bulk purchase of proven, ready systems; regular tendering — where Zen's IDDM advantages actually bind — is what resumes afterwards. The ₹52,000 Cr of AoNs is the leading indicator of that resumption, because AoNs precede RFPs by quarters, not years. One nuance cuts both ways: a fresh conflict flare-up would raise long-term budgets again while freezing regular tenders again — the same mechanism that produced FY26.</p>
+    </div></div>
+    <div class="peel-row"><div class="ptag tag-l">L</div><div><span class="plab">Link</span>
+      <p>If the policy-artefact reading is right, tender flow visibly resumes between Q2 FY27 and Q1 FY28, with counter-UAS programmes playing directly to the May–July 2026 launches. The test is dated: material order announcements by the Q3 FY27 results in January 2027. Silence through that window would mean the drought is structural — DRDO transferring anti-drone technology to competitors, startups taking share — and this thesis needs rewriting. Also watch DAP 2026's finalisation: the draft is favourable; the final text is the fact.</p>
+    </div></div>
+  </div>
+
+  <div class="peel">
+    <div class="peel-head"><span class="pnum">PEEL 4</span><h3>The export second act is real intent, half-built machinery</h3></div>
+    <div class="peel-row"><div class="ptag tag-p">P</div><div><span class="plab">Point</span>
+      <p>The export ambition — a rebuilt 30%+ mix, $100M from the US inside three years — is genuine strategy backed by structural moves, but the machinery is only half-built and the stated timetable is unlikely to be met.</p>
+    </div></div>
+    <div class="peel-row"><div class="ptag tag-e">E</div><div><span class="plab">Evidence</span>
+      <ul>
+        <li>Exports were ~38% of FY25 turnover; they are 6.9% (₹85 Cr) of the current order book.</li>
+        <li>Zen has placed IP and commercial rights into Zen Technologies USA and Zen Defence Technologies LLC (UAE) — explicitly to route around SCOMET licensing and the legal priority Indian military orders hold over export commitments.</li>
+        <li>The US plan is ITAR clearance plus prime-vendor partnerships, not direct bidding — a market management itself calls "very closed and very difficult". Zen USA lost ₹4.35 Cr in FY25: cost arriving before revenue.</li>
+        <li>Vector reports ~half its propulsion enquiries from overseas; ARI brought DNV Class A certification and commercial marine customers.</li>
+        <li>On 4 August 2026 the board appointed an independent director whose stated brief includes "international investments and technology-focused initiatives".</li>
+      </ul>
+    </div></div>
+    <div class="peel-row"><div class="ptag tag-x">E</div><div><span class="plab">Explanation</span>
+      <p>The offshore-IP structure solves the two Indian constraints — licensing speed and domestic priority — but creates the American one: ITAR-compliant supply chains, facility clearances and a prime willing to carry an Indian-origin subsystem, none of which is announced yet. ARI's commercial marine line is the softer wedge, because DNV-certified simulation sells internationally without defence gatekeeping. That is precisely why ARI received 72% of the M&amp;A budget: it is the export strategy wearing a naval-simulation label.</p>
+    </div></div>
+    <div class="peel-row"><div class="ptag tag-l">L</div><div><span class="plab">Link</span>
+      <p>Expect export progress to appear first in ARI's commercial pipeline and Vector's propulsion sales, with a named US teaming agreement as the catalyst to watch for in FY27–28. Treat $100M-in-three-years as a direction, not a forecast — the structural work says the intent is serious even where the timeline is not.</p>
+    </div></div>
+  </div>
+
+  <div class="peel">
+    <div class="peel-head"><span class="pnum">PEEL 5</span><h3>The two-year test, dated and falsifiable</h3></div>
+    <div class="peel-row"><div class="ptag tag-p">P</div><div><span class="plab">Point</span>
+      <p>Everything above converges on one dated test: convert the policy pipeline into roughly ₹2,000 Cr of fresh orders by March 2027 while digesting seven acquisitions — and management has already pre-announced the margin cost of passing it.</p>
+    </div></div>
+    <div class="peel-row"><div class="ptag tag-e">E</div><div><span class="plab">Evidence</span>
+      <ul>
+        <li>Guidance: ₹2,500 Cr unexecuted book by end-FY27, from ₹1,239 Cr in June — net of execution, that implies ₹2,000 Cr+ of inflow in nine months, against ₹44.6 Cr in Q1.</li>
+        <li>₹4,000 Cr cumulative revenue guided across FY27+FY28; long-term margins guided to 35% EBITDA / 25% PAT versus 48.4% / ~28% in FY26.</li>
+        <li>The load-bearing facts underneath: working capital at 543 days, three loss-making subsidiaries, ROCE down from 46% to 16% in two years, a CFO in post since January and a CTO since May.</li>
+      </ul>
+    </div></div>
+    <div class="peel-row"><div class="ptag tag-x">E</div><div><span class="plab">Explanation</span>
+      <p>The guidance arithmetic only closes with programme-scale wins of ₹300 Cr and above — which are exactly the contracts that lengthen validation cycles and stretch working capital further. Passing the revenue test makes the cash-conversion test harder; the two constraints are coupled, not independent. Integration is the silent third constraint: a sub-400-person company running eight entities has no spare management bandwidth for a stumble, which is what the wholesale leadership refresh is trying to buy.</p>
+    </div></div>
+    <div class="peel-row"><div class="ptag tag-l">L</div><div><span class="plab">Link</span>
+      <p><strong>Bull:</strong> policy timing is right and one programme lands — backlog clears ₹2,500 Cr by March 2027, revenue re-accelerates in FY28, and the 82× multiple survives. <strong>Base:</strong> partial recovery to ₹1,800–2,200 Cr of backlog, guidance quietly rebased, the multiple compresses toward the sector. <strong>Bear:</strong> intake stays below ₹100 Cr a quarter through FY27 and working capital holds above 500 days — a second guidance miss on an 80× multiple produces a severe derating, and the ₹1,217 Cr of cash becomes the floor under the equity rather than the fuel for the thesis.</p>
+    </div></div>
+  </div>
+
+  <h3>The company the evidence describes in FY29</h3>
+  <div class="card">
+    <p>If the two-year test is passed even partially: a defence-electronics group of nine to ten entities doing ₹1,800–2,200 Cr of revenue at margins nearer 35/25 than FY26's 48/28 — counter-UAS and integrated systems out-earning simulators, naval and commercial marine as the second leg, munitions as a small consumable annuity, and exports rebuilding through the US/UAE structure with ARI's DNV-certified commercial products as the wedge.</p>
+    <p style="margin-bottom:0">The identity shift is the point: from "the simulator company" to an autonomous-battlefield mini-prime — and the risk profile shifts with it, from software vendor (high margin, low capital) to programme prime (concentration, working capital, timing). Sooner or later the multiple will be asked to decide which of those two companies it is pricing.</p>
+  </div>
+
+  <h3>Signposts — what to watch, and when to judge</h3>
+  <div class="twrap">
+    <table>
+      <thead><tr><th>Signpost</th><th>Bull confirmation</th><th>Bear warning</th><th>When to judge</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Quarterly order inflow</strong></td><td>≥₹500 Cr/quarter resumes</td><td>Stays below ₹100 Cr</td><td>Q3 FY27 results, Jan 2027</td></tr>
+        <tr><td><strong>Counter-UAS tenders from the ₹52,000 Cr AoNs</strong> (incl. AKASH TARANG)</td><td>Zen shortlisted or winning</td><td>Awards go to BEL and startups</td><td>FY27 – H1 FY28</td></tr>
+        <tr><td><strong>Working capital days</strong></td><td>Retracing toward 300</td><td>Holding above 500</td><td>FY27 full-year results</td></tr>
+        <tr><td><strong>Next acquisition</strong></td><td>ARI-scale deal filling a stack gap — optics, comms, export beachhead</td><td>Diversification drift, or cash idling</td><td>Within 12–18 months</td></tr>
+        <tr><td><strong>US / export catalyst</strong></td><td>Named prime partnership or ITAR progress; ARI commercial wins</td><td>Silence through FY28</td><td>FY27–28</td></tr>
+        <tr><td><strong>Subsidiary P&amp;L</strong></td><td>Vector and TISA turn profitable</td><td>Losses widen; minority frictions surface</td><td>FY27 annual report</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <div class="lbl">Status of this section</div>
+    <p>This section is analysis, not reportage. The evidence rows restate facts documented in sections 1–11; the direction-of-travel conclusions are inferences from that evidence and carry the usual fragility of forward-looking reasoning — most acutely on tender timing, which is the one variable Zen does not control.</p>
+  </div>
+</section>
+
+<!-- 11 -->
+<section id="sources">
+  <p class="eyebrow">13 · Sources &amp; method</p>
+  <h2>How this was built</h2>
+  <p>Every figure in this report was extracted from a NotebookLM corpus of <strong>70 sources</strong> covering Zen Technologies, using the notebook's own grounded chat rather than general model knowledge. Six sources were added to close gaps in the existing corpus before extraction:</p>
+  <ul class="tight">
+    <li>32nd Annual Report FY2024-25 (primary)</li>
+    <li>CRISIL rating rationale, 27 January 2025</li>
+    <li>Q1 FY27 earnings call transcript — two independent renderings</li>
+    <li>Q1 FY27 investor presentation</li>
+    <li>Zen investor calls and conferences register</li>
+  </ul>
+  <p>The pre-existing corpus contributed company product pages, acquisition announcements, Janes and Asia Pacific Defence Reporter coverage, broker notes from ICICI Securities and HDFC Securities, IIFL management discussion extracts, Trendlyne and Screener data, and Wikipedia.</p>
+
+  <h3>The §07b product-line model</h3>
+  <p>The recurring-revenue deep dive is original analysis, not extraction, and rests on a separate primary-source pass. Historical revenue FY13–FY22 was rebuilt from Zen's own audited quarterly filings and annual reports (20th through 30th). The equipment/services disaggregation comes from the Ind AS 115 note as reproduced in ICICI Securities' July 2024 initiation (FY19–FY22), disclosed AMC percentages (FY23–FY24), and the quarterly standalone highlights slide (FY25–FY26). The five-year AMC block structure is confirmed by two company press releases — ₹55 Cr, 22 April 2022 and ₹46 Cr, 1 October 2024 — and by the CFO's revenue-recognition comment on the Q4 FY26 call.</p>
+  <ul class="tight">
+    <li><strong>The 36-month warranty, 10% attach and 120% lifetime figures are broker claims, not company disclosure.</strong> None appears in any Zen filing. Zen's own support page states a 12-month warranty; Atluri's only lifecycle statement on the record is ten years.</li>
+    <li><strong>FY25 and FY26 AMC revenue are estimates</strong> annualised from disclosed quarterly figures (₹10.70 Cr Q3 FY25, ₹10.27 Cr Q4 FY25, ₹10.05 Cr Q3 FY26, standalone). Zen stopped publishing the annual split.</li>
+    <li><strong>FY13–FY17 equipment/service shares are estimated</strong> at 19–21% services from the two years where annual reports disclose it. The fitted life of 10 years is unchanged across every assumption from 10% to 40%, so this does not drive the result.</li>
+    <li><strong>The projection assumes renewal.</strong> No renewal rate, churn or attrition figure exists in any public source. Only ₹318 Cr of the modelled stream is contracted.</li>
+  </ul>
+
+  <div class="callout warn">
+    <div class="lbl">Caveats you should carry forward</div>
+    <p><strong>No reported segment revenue split exists.</strong> Zen states in every filing that it operates one segment — "Defence and Homeland" — so Ind AS 108 segmental reporting is not presented. Any simulator-versus-counter-drone <em>revenue</em> figure you encounter is an estimate. Product-line data exists only for the order book (Training Simulators ₹188.13 Cr vs Anti-Drone ₹503.81 Cr at 31 March 2025). FY26 gross margin was not separately disclosed. Employee headcount (~395 permanent) is an FY25 standalone figure that predates the 2025 acquisitions, so group headcount today is higher but undisclosed. Peer CAGR figures are FY23–FY26E and include estimates. Eight sources in the original corpus failed ingestion (paywalled or JavaScript-gated) and contributed nothing.</p>
+  </div>
+  <p class="src">This is a research summary for personal understanding. It is not investment advice, and it is not a recommendation to buy or sell any security. Figures should be verified against primary filings before any decision.</p>
+</section>
+
+</div>
+<div class="footer">
+  <strong>Zen Technologies — Business Deep Dive.</strong> Compiled 6 August 2026 from a 70-source NotebookLM corpus.
+  Financial data as reported to 30 June 2026 (Q1 FY27), with corporate developments through 6 August 2026.
+</div>
+</main>
+</div>
+
+<script src="assets/report.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+[build]
+  publish = "."
+  command = ""
+
+# Static site, no build step. Every directory is served as-is:
+#   /                          FALL LINE (index.html)
+#   /reports/zen-technologies/ Zen Technologies deep dive
+#
+# To make a report the site root instead, point `publish` at its directory,
+# e.g. publish = "reports/zen-technologies".
