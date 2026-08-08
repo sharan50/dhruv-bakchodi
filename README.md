@@ -1,3 +1,15 @@
+Self-contained HTML things. Nothing here needs a build step or a package manager —
+every page opens straight from disk and deploys as static files.
+
+| Path | What it is |
+|---|---|
+| [`index.html`](index.html) | **FALL LINE** — an endless procedural alpine descent (below) |
+| [`reports/zen-technologies/`](reports/zen-technologies/) | **Zen Technologies** — business deep dive report with inline SVG charts |
+
+Deployed as-is via `netlify.toml`: `/` is the game, `/reports/<name>/` is each report.
+
+---
+
 # FALL LINE
 
 An endless procedural alpine descent that runs in a single HTML file. No build step,
