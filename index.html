@@ -130,6 +130,60 @@
   #best{font-size:11px;color:#7f97bb;letter-spacing:.1em;margin-top:14px;font-weight:700}
   .hint{font-size:10.5px;color:#64789b;margin-top:16px;letter-spacing:.06em;line-height:1.7}
   #fps{position:absolute;left:18px;top:176px;font-size:9px;color:#546d92;letter-spacing:.1em;font-weight:700}
+
+  /* ---------- touch controls ----------
+     Hidden until the device reveals a touch pointer; then the phone gets the
+     same three axes as the keyboard: a latching effort slider (left), steer
+     arrows (bottom right) and a pop button. */
+  #touch{display:none}
+  body.touch #touch{display:block}
+  #tSlider{position:absolute;left:14px;bottom:110px;width:58px;height:min(38vh,290px);
+    pointer-events:auto;background:rgba(9,17,33,.55);border:1px solid rgba(150,192,255,.28);
+    border-radius:16px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    padding:14px 0;touch-action:none}
+  #tTrack{position:relative;height:100%;width:8px;margin:0 auto;border-radius:5px;
+    background:rgba(255,255,255,.14)}
+  #tFill{position:absolute;left:0;bottom:0;width:100%;border-radius:5px;height:0%;
+    background:linear-gradient(0deg,#38bdf8,#7dd3fc)}
+  .tDet{position:absolute;left:-7px;width:22px;height:3px;border-radius:2px;
+    background:rgba(200,225,255,.35);transform:translateY(50%)}
+  #tThumb{position:absolute;left:-15px;width:38px;height:26px;border-radius:9px;
+    background:linear-gradient(180deg,#93d7fb,#38bdf8);border:1px solid #bae6fd;
+    box-shadow:0 3px 14px rgba(56,189,248,.5);transform:translateY(50%)}
+  #tLbl{position:absolute;left:-14px;right:-14px;bottom:-26px;text-align:center;font-size:9px;
+    letter-spacing:.14em;font-weight:800;color:#cfe4ff;text-shadow:0 1px 5px rgba(0,0,0,.8)}
+  #tSteer{position:absolute;right:14px;bottom:20px;display:flex;gap:12px;pointer-events:auto}
+  .tBtn{width:82px;height:82px;border-radius:22px;display:flex;align-items:center;justify-content:center;
+    background:rgba(9,17,33,.55);border:1px solid rgba(150,192,255,.30);
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    font-size:30px;font-weight:900;color:#cfe4ff;touch-action:none;user-select:none;-webkit-user-select:none}
+  .tBtn.on{background:linear-gradient(180deg,#7dd3fc,#38bdf8);color:#04202e;border-color:#bae6fd;
+    box-shadow:0 0 18px rgba(56,189,248,.55)}
+  #tPop{position:absolute;right:14px;bottom:118px;width:60px;height:60px;border-radius:50%;
+    pointer-events:auto;display:flex;align-items:center;justify-content:center;
+    background:rgba(9,17,33,.55);border:1px solid rgba(150,192,255,.30);
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);font-size:11px;font-weight:900;
+    letter-spacing:.1em;color:#cfe4ff;touch-action:none;user-select:none;-webkit-user-select:none}
+  #tPop.on{background:linear-gradient(180deg,#7dd3fc,#38bdf8);color:#04202e}
+
+  /* the slider replaces the stance panel; clear the corners the controls use */
+  body.touch #stance{display:none}
+  body.touch #stab{left:50%;right:auto;transform:translateX(-50%);bottom:114px;min-width:140px;padding:7px 11px}
+  body.touch #strip{top:235px;bottom:235px;width:14px;right:10px}
+  .tOnly{display:none}
+  body.touch .tOnly{display:block}
+
+  @media (max-width:640px){
+    #runInfo{min-width:150px;padding:7px 10px}
+    #runName{font-size:13px}
+    #pitchRead{font-size:9px}
+    #dist{min-width:110px;padding:7px 10px}
+    #distVal{font-size:19px}
+    #spd{min-width:100px;padding:7px 10px}
+    #spdVal{font-size:24px}
+    #spdSub,#dropVal{font-size:9px}
+    #fps{display:none}
+  }
 </style>
 </head>
 <body>
@@ -190,6 +244,25 @@
       <div id="warn">OFF PISTE</div>
     </div>
     <div id="fps"></div>
+
+    <div id="touch">
+      <div id="tSlider">
+        <div id="tTrack">
+          <div id="tFill"></div>
+          <div class="tDet" style="bottom:0%"></div>
+          <div class="tDet" style="bottom:33.33%"></div>
+          <div class="tDet" style="bottom:66.67%"></div>
+          <div class="tDet" style="bottom:100%"></div>
+          <div id="tThumb"></div>
+        </div>
+        <div id="tLbl">FLAT</div>
+      </div>
+      <div id="tPop">POP</div>
+      <div id="tSteer">
+        <div class="tBtn" id="tLeft">◀</div>
+        <div class="tBtn" id="tRight">▶</div>
+      </div>
+    </div>
   </div>
 
   <div id="screens">
@@ -863,6 +936,7 @@ const AU = {
 /* ================================================================ INPUT === */
 const keys = Object.create(null);
 const IN = { steer:0, effort:0, q:false, w:false, e:false, pop:false };
+const TOUCH = { on:false, effort:0, l:false, r:false };   // wired up in touchInit()
 addEventListener('keydown', ev => {
   const k = ev.key.toLowerCase();
   if ([' ','arrowleft','arrowright','arrowup','arrowdown','q','w','e','r','p','escape'].includes(k)) ev.preventDefault();
@@ -877,9 +951,14 @@ addEventListener('keyup', ev => { keys[ev.key.toLowerCase()] = false; });
 addEventListener('blur', () => { for (const k in keys) keys[k] = false; });
 
 function readInput() {
-  const l = keys['arrowleft'] || keys['a'], r = keys['arrowright'] || keys['d'];
+  const l = keys['arrowleft'] || keys['a'] || TOUCH.l,
+        r = keys['arrowright'] || keys['d'] || TOUCH.r;
   IN.steer = (r ? 1 : 0) - (l ? 1 : 0);
-  IN.q = !!keys['q']; IN.w = !!keys['w']; IN.e = !!keys['e'];
+  // the touch slider acts as virtually-held QWE keys, so the HUD, the tuck
+  // rule and the physics all read exactly what a keyboard would give them
+  IN.q = !!keys['q'] || TOUCH.effort >= 1;
+  IN.w = !!keys['w'] || TOUCH.effort >= 2;
+  IN.e = !!keys['e'] || TOUCH.effort >= 3;
   IN.effort = (IN.q ? 1 : 0) + (IN.w ? 1 : 0) + (IN.e ? 1 : 0);
 }
 
@@ -2476,7 +2555,7 @@ const HUD = {
   init() {
     for (const id of ['hud','runName','diffPill','diffTxt','diffGlyph','pitchRead','distVal','dropVal',
       'spdVal','spdSub','gforceF','kQ','kW','kE','stanceTxt','edgeDeg','edgeL','edgeR','stabF','stabTxt',
-      'toast','toastDiff','toastName','toastSub','airTime','warn','strip','stripMe','fps'])
+      'toast','toastDiff','toastName','toastSub','airTime','warn','strip','stripMe','fps','tLbl'])
       this.el[id] = $(id);
   },
   airPop(t) { this.airT = 1.5; this.el.airTime.textContent = 'AIR ' + t.toFixed(1) + 's'; },
@@ -2542,6 +2621,7 @@ const HUD = {
           'Driving the boots — real edge grip',
           'Loaded up — maximum angulation' ][IN.effort];
     e.stanceTxt.textContent = stanceTxt;
+    if (TOUCH.on) e.tLbl.textContent = S.tuck ? 'TUCK' : ['FLAT', 'FLEX', 'DRIVE', 'SEND'][TOUCH.effort];
     e.edgeDeg.textContent = Math.round(S.edgeAngle / DEG) + '°';
     const eL = S.edge < 0 ? Math.abs(S.edge) * 100 : 0;
     const eR = S.edge > 0 ? S.edge * 100 : 0;
@@ -2568,6 +2648,59 @@ const HUD = {
     }
   },
 };
+
+/* ====================================================== TOUCH CONTROLS ====
+   Phones get the desktop control scheme, reshaped for thumbs: the left-hand
+   slider is the effort axis (0 flat .. 3 send — and full effort with no
+   steering is the tuck, exactly as on a keyboard), the two arrows bottom
+   right carve, and the round button pops. The slider latches where you leave
+   it, because a thumb can't hold three keys down a whole descent. */
+function touchInit() {
+  if (TOUCH.on) return;
+  TOUCH.on = true;
+  document.body.classList.add('touch');
+
+  const slider = $('tSlider'), track = $('tTrack'), thumb = $('tThumb'),
+        fill = $('tFill'), lbl = $('tLbl');   // may run before HUD.init()
+  const setUI = () => {
+    const f = TOUCH.effort / 3 * 100;
+    thumb.style.bottom = f + '%';
+    fill.style.height = f + '%';
+    lbl.textContent = ['FLAT', 'FLEX', 'DRIVE', 'SEND'][TOUCH.effort];
+  };
+  const fromY = y => {
+    const r = track.getBoundingClientRect();
+    TOUCH.effort = Math.round(clamp(1 - (y - r.top) / r.height, 0, 1) * 3);
+    setUI();
+  };
+  slider.addEventListener('pointerdown', ev => {
+    ev.preventDefault();
+    try { slider.setPointerCapture(ev.pointerId); } catch (e) {}
+    fromY(ev.clientY);
+  });
+  slider.addEventListener('pointermove', ev => {
+    if (slider.hasPointerCapture && slider.hasPointerCapture(ev.pointerId)) fromY(ev.clientY);
+  });
+  setUI();
+
+  const hold = (el, set) => {
+    const off = () => { set(false); el.classList.remove('on'); };
+    el.addEventListener('pointerdown', ev => {
+      ev.preventDefault();
+      try { el.setPointerCapture(ev.pointerId); } catch (e) {}
+      set(true); el.classList.add('on');
+    });
+    el.addEventListener('pointerup', off);
+    el.addEventListener('pointercancel', off);
+    el.addEventListener('pointerleave', off);
+  };
+  hold($('tLeft'),  v => { TOUCH.l = v; });
+  hold($('tRight'), v => { TOUCH.r = v; });
+  hold($('tPop'),   v => { if (v) { if (GAME.state === 'run') IN.pop = true; else GAME.space(); } });
+  addEventListener('blur', () => { TOUCH.l = TOUCH.r = false; });
+}
+if (window.matchMedia && matchMedia('(pointer: coarse)').matches) touchInit();
+addEventListener('touchstart', touchInit, { once:true, passive:true });
 
 /* ================================================================ GAME ==== */
 const GAME = {
@@ -2630,6 +2763,8 @@ const GAME = {
             the further you get — and thin right out on the blacks. Hit another skier and you both go down.</span></div>
           <div class="ctrl"><b>ALSO</b><span><kbd>P</kbd> pause · <kbd>R</kbd> restart · <kbd>M</kbd> mute.
             Keep it between the orange poles.</span></div>
+          <div class="ctrl tOnly"><b>TOUCH</b><span>Left slider sets effort — slide to the top for a full tuck.
+            Hold the arrows to carve. The round button pops.</span></div>
         </div>
         <div class="legend">
           ${DIFFS.map(d => `<span class="lg"><i style="background:${d.col};border-radius:${d.shape === 'circle' ? '50%' : '0'};
