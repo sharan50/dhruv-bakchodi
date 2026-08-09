@@ -67,6 +67,25 @@ markers, B-net on the steeps, snow guns, hay-bale padding, a running chairlift, 
 trees that will absolutely end your run. The strip on the right edge of the HUD shows
 what's coming.
 
+## Traffic
+
+You don't have the mountain to yourself. Other skiers ride the same pistes — each
+with their own pace, rhythm and line. Crowds build the further into the descent you
+get, and they concentrate exactly where you'd expect: on the groomed greens and
+blues. Reds are noticeably quieter, blacks are close to empty, and a double black
+is usually yours alone.
+
+Traffic follows real slope etiquette: the uphill skier is responsible for avoiding
+the one below — and the good ones actually do, bending their line around you. The
+weak ones don't. They ski slower, swing wider, and occasionally fall over on their
+own out on the hard stuff, leaving a downed skier lying in the piste as a trip
+hazard until they dust themselves off.
+
+Contact is a crash for everyone involved. Hit someone hard — or get hit from
+behind — and you both go down, ending your run. A glancing brush knocks them over
+and costs you speed and balance instead. The end screen counts how many skiers you
+passed cleanly.
+
 ## Two surfaces
 
 You should never be in doubt about whether you're on the trail.
