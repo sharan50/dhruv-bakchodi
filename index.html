@@ -850,6 +850,8 @@ const AU = {
               this.musicBus.gain.cancelScheduledValues(t);
               this.musicBus.gain.setValueAtTime(this.musicBus.gain.value, t);
               this.musicBus.gain.linearRampToValueAtTime(0.62, t + 0.7); },
+  swish(g)  { if (!this.ok || this.muted) return; const t = this.ctx.currentTime;
+              this.noiseHit({ t, f:1600, f2:280, dur:0.35, g:g || 0.085, q:0.9 }); },
   chime(d)  { if (!this.ok || this.muted) return; const t = this.ctx.currentTime;
               const base = [76,74,69,67,65][clamp(d,0,4)];
               const iv = d >= 3 ? [0,3,7] : [0,4,7];
@@ -891,7 +893,7 @@ const S = {
   speed:0, air:false, airT:0, airTotal:0, bestAir:0,
   onGround:true, risk:0, lat:0, skid:0, carveNoise:0, chatter:0, gForce:1,
   edgeAngle:0, tuck:false, offPiste:0, popCd:0, lastPop:0, stuckT:0,
-  dist:0, drop:0, startY:0, maxSpeed:0, time:0, alive:true, maxDiff:0,
+  dist:0, drop:0, startY:0, maxSpeed:0, time:0, alive:true, maxDiff:0, passes:0,
 };
 
 function resetSkier() {
@@ -904,6 +906,7 @@ function resetSkier() {
   S.onGround = true; S.risk = 0; S.lat = 0; S.skid = 0; S.carveNoise = 0; S.chatter = 0;
   S.gForce = 1; S.edgeAngle = 0; S.tuck = false; S.offPiste = 0; S.popCd = 0; S.stuckT = 0;
   S.dist = 0; S.drop = 0; S.startY = S.y; S.maxSpeed = 0; S.time = 0; S.alive = true; S.maxDiff = 0;
+  S.passes = 0;
 }
 
 function stepPhysics(dt) {
@@ -1115,6 +1118,7 @@ function stepPhysics(dt) {
   S.time += dt;
 
   checkCollisions();
+  if (S.alive) checkNpcCollisions();
 }
 
 function crash(reason) {
@@ -1215,6 +1219,193 @@ function stepRagdoll(dt) {
       p.vx *= f; p.vz *= f; p.av *= f; p.rv *= f;
       if (Math.hypot(p.vx, p.vy, p.vz) < 0.55) { p.rest = true; p.vx = p.vy = p.vz = 0; p.av = p.rv = 0; }
     }
+  }
+}
+
+/* ================================================================ NPCS ====
+   Other skiers sharing the mountain. Traffic builds the further into the
+   day you get — and thins right out on the steeps, because most people
+   simply never point their skis down a black. Each one holds their own
+   rhythm down the piste; contact is a crash for everyone involved. */
+const NPCS = [];
+const NPC_MAX = 14;
+const NPC_BY_DIFF = [1.0, 0.92, 0.58, 0.20, 0.07];   // green .. double black
+const NPC_JACKETS = [
+  ['#dc2626','#7f1d1d'], ['#ea580c','#7c2d12'], ['#eab308','#713f12'],
+  ['#16a34a','#14532d'], ['#7c3aed','#3b0764'], ['#db2777','#831843'],
+  ['#f8fafc','#475569'], ['#1d4ed8','#172554'], ['#0d9488','#134e4a'],
+];
+const NPC_HELMETS = ['#e2e8f0', '#0f172a', '#dc2626', '#facc15'];
+const NPC_SKIS = ['#e11d48', '#f59e0b', '#0ea5e9', '#10b981', '#f472b6', '#a3e635'];
+
+/* how crowded the hill is at z: builds with distance covered, then falls
+   away with difficulty — greens and blues carry the traffic, blacks are
+   close to empty, double blacks deserted */
+function npcDensity(z) {
+  const build = 0.30 + 0.70 * sstep(120, 2400, z);
+  return build * NPC_BY_DIFF[paramsAt(z).diff];
+}
+
+let npcSpawnT = 0;
+function spawnNpcAt(z) {
+  const p = paramsAt(z);
+  const skill = Math.pow(Math.random(), 0.65);        // most are middling
+  const jacket = pick(NPC_JACKETS);
+  const n = {
+    z, x: centerAt(z) + rnd(-0.72, 0.72) * p.width,
+    y: 0, yaw: 0, vz: lerp(4.2, 11.5, skill), vxAct: 0, airV: 0,
+    skill,
+    cruise: lerp(4.6, 13.2, skill) * rnd(0.92, 1.1),
+    amp: clamp(rnd(0.25, 0.55) + (1 - skill) * 0.15, 0.2, 0.7),
+    freq: rnd(0.045, 0.085) * lerp(1.25, 0.8, skill),
+    phase: rnd(0, TAU),
+    lean: 0, stanceH: lerp(0.88, 0.60, skill),
+    c1: hex2rgb(jacket[0]), c2: hex2rgb(jacket[1]),
+    helm: hex2rgb(pick(NPC_HELMETS)), skiC: hex2rgb(pick(NPC_SKIS)),
+    downed: false, downT: 0, getUp: 0, hitVx: 0, hitVz: 0, coolT: 0,
+    relPrev: z - S.z, sprA: rnd(-0.5, 0.5), warned: false,
+  };
+  if (z < S.z)                                        // spawned uphill: they're coming through
+    n.cruise = clamp(Math.max(n.cruise, S.speed + rnd(1.5, 4.0)), 5, 16.5);
+  n.vz = Math.min(n.vz, n.cruise);
+  n.y = terrainH(n.x, n.z);
+  NPCS.push(n);
+}
+
+function knockDownNpc(n, vx, vz, loud) {
+  if (n.downed) return;
+  n.downed = true; n.downT = 0; n.getUp = rnd(3.2, 6.0);
+  n.hitVx = vx * 0.45; n.hitVz = Math.max(0, vz) * 0.45;
+  n.coolT = 1.0;
+  if (loud) { AU.hit(); spray(30, 1.8); cam.shake = Math.max(cam.shake, 0.8); }
+}
+
+function stepNpcs(dt) {
+  // population control: try one spawn per tick, gated by how busy the hill
+  // should be at the spawn point itself — so an empty black stays empty even
+  // while you're still finishing the blue above it
+  npcSpawnT -= dt;
+  if (npcSpawnT <= 0) {
+    npcSpawnT = 0.28;
+    // no spawning during the wipeout — the crash camera swings far enough
+    // round that a behind-spawn would materialise in full view
+    if (GAME.state !== 'crash') {
+      const behind = S.speed < 8.5 && Math.random() < 0.25; // overtakers only make sense when you're slow
+      const z = behind ? S.z - rnd(38, 55) : S.z + rnd(235, 305);
+      if (z > 20 && z < COURSE.nextZ - 80 && NPCS.length < Math.round(NPC_MAX * npcDensity(z)))
+        spawnNpcAt(z);
+    }
+  }
+
+  for (let i = NPCS.length - 1; i >= 0; i--) {
+    const n = NPCS[i];
+    if (n.z < S.z - 80 || n.z > S.z + 340) { NPCS.splice(i, 1); continue; }
+    n.coolT = Math.max(0, n.coolT - dt);
+
+    if (n.downed) {
+      n.downT += dt;
+      const k = Math.max(0, 1 - dt * 2.2);
+      n.hitVx *= k; n.hitVz *= k;
+      n.x += n.hitVx * dt; n.z += n.hitVz * dt;
+      n.y = terrainH(n.x, n.z);
+      n.relPrev = n.z - S.z;      // keep the crossing bookkeeping live, else a
+                                  // stand-up 40 m uphill fires a phantom swish
+      if (n.downT > n.getUp) { n.downed = false; n.vz = Math.max(2, n.cruise * 0.35); n.coolT = 0.5; }
+      continue;
+    }
+
+    const p = paramsAt(n.z);
+    const hw = p.width, cx = centerAt(n.z);
+    const dzP = S.z - n.z;        // +ve: the player is downhill of this skier
+
+    // everyone checks their speed on steep ground — the good ones less so
+    const steep = clamp((p.slope - 12 * DEG) / (26 * DEG), 0, 1);
+    const want = n.cruise * lerp(1, lerp(0.5, 1.05, n.skill), steep);
+    n.vz += (want - n.vz) * Math.min(1, dt * 0.7);
+    // closing on somebody's back, a skier checks their speed to match — how
+    // reliably depends entirely on how good they are, so the beginners are
+    // still the ones who hit you from behind
+    if (S.alive && GAME.state === 'run' && dzP > 0 && dzP < 12 && Math.abs(S.x - n.x) < 3.2) {
+      const cap = S.speed + 1.5;
+      if (n.vz > cap) n.vz += (cap - n.vz) * Math.min(1, dt * (0.8 + 2.6 * n.skill));
+      // a whoosh of warning when someone's coming through hot
+      if (!n.warned && n.vz > S.vz + 2) { n.warned = true; AU.swish(0.05); }
+    }
+    if (dzP > 18 || dzP < -2) n.warned = false;
+
+    // their line: a personal rhythm around the centreline...
+    let tx = cx + Math.sin(n.z * n.freq + n.phase) * n.amp * hw;
+    // ...bent to give the downhill skier space. The uphill skier is the one
+    // responsible for avoiding — and only the good ones actually manage it.
+    // The window runs through the pass itself (down to -4) so the clearance
+    // isn't released while they're still alongside you.
+    if (S.alive && GAME.state === 'run') {
+      if (dzP > -4 && dzP < 26) {
+        const room = 2.8 - Math.abs(S.x - tx);
+        if (room > 0) tx -= Math.sign(S.x - tx || 1) * room * lerp(0.25, 1.0, n.skill);
+      }
+    }
+    const maxLat = n.vz * 0.55 + 0.5;
+    n.vxAct = clamp((tx - n.x) * 3.0, -maxLat, maxLat);
+    n.x += n.vxAct * dt;
+    n.z += n.vz * dt;
+
+    // stick to the snow, with just enough give to catch air off a roller
+    const gh = terrainH(n.x, n.z);
+    if (gh >= n.y) { n.y = gh; n.airV = 0; }
+    else { n.airV += PHYS.G * dt; n.y = Math.max(gh, n.y - n.airV * dt); }
+
+    const wantLean = clamp(n.vxAct / (n.vz + 1), -1, 1) * 0.55;
+    n.lean += (wantLean - n.lean) * Math.min(1, dt * 5);
+    n.yaw += (Math.atan2(n.vxAct, Math.max(n.vz, 0.5)) - n.yaw) * Math.min(1, dt * 6);
+
+    // weak skiers fall over on their own out on the hard stuff
+    const hazard = (p.mogul * 0.9 + steep * 0.8) * (1 - n.skill);
+    if (hazard > 0.02 && Math.random() < dt * hazard * 0.045)
+      knockDownNpc(n, n.vxAct * 0.5, n.vz * 0.5, false);
+
+    // passing tally + the whoosh of close traffic. The |rel| bound keeps a
+    // deferred detection (despawn edge cases) from whooshing at a distance.
+    const rel = n.z - S.z;
+    if (GAME.state === 'run' && S.alive && Math.abs(rel) < 8) {
+      if (n.relPrev > 0 && rel <= 0) { S.passes++; if (Math.abs(n.x - S.x) < 6) AU.swish(); }
+      else if (n.relPrev < 0 && rel >= 0 && Math.abs(n.x - S.x) < 6) AU.swish();
+    }
+    n.relPrev = rel;
+  }
+}
+
+/* contact with another skier: they go down every time; whether you join
+   them depends on how hard you met */
+function checkNpcCollisions() {
+  for (let i = 0; i < NPCS.length; i++) {
+    const n = NPCS[i];
+    if (n.coolT > 0) continue;
+    const dz = n.z - S.z; if (dz < -1.6 || dz > 1.6) continue;
+    const dx = n.x - S.x; if (dx < -1.3 || dx > 1.3) continue;
+    // clean vertical miss either way: you pop over them, or they fly over you
+    const dy = S.y - n.y;
+    if (dy > (n.downed ? 0.85 : 1.9) || dy < -2.0) continue;
+    if (Math.hypot(dx, dz) > (n.downed ? 1.0 : 0.85)) continue;
+
+    if (n.downed) {
+      if (S.speed > 3.6) return crash('TRIPPED OVER A DOWNED SKIER');
+      S.vx *= 0.72; S.vz *= 0.72;
+      S.risk = clamp(S.risk + 0.34, 0, 1.05);
+      n.coolT = 1.0;
+      AU.hit(); cam.shake = Math.max(cam.shake, 0.5);
+      continue;
+    }
+
+    const rel = Math.hypot(S.vx - n.vxAct, S.vz - n.vz);
+    knockDownNpc(n, S.vx, S.vz, true);
+    if (rel > 4.3)
+      return crash(dz < 0 ? 'TAKEN OUT FROM BEHIND' : 'TOOK OUT ANOTHER SKIER');
+    // glancing contact: they're down, you wobble away with a warning
+    S.vx *= 0.78; S.vz *= 0.78;
+    S.vx -= Math.sign(dx || 1) * 1.3;
+    S.risk = clamp(S.risk + 0.38, 0, 1.05);
+    cam.shake = Math.max(cam.shake, 0.6);
   }
 }
 
@@ -1669,6 +1860,10 @@ function buildRenderList() {
   for (const p of PARTS) renderList.push({ t:100, z:p.z, cd:camDepth(p.x, p.z), p });
   if (ragdoll) for (const p of ragdoll) renderList.push({ t:101, z:p.z, cd:camDepth(p.x, p.z), p });
   else if (S.alive) renderList.push({ t:102, z:S.z, cd:camDepth(S.x, S.z) });
+  for (const n of NPCS) {
+    const cd = camDepth(n.x, n.z);
+    if (cd > 0.6 && cd < FAR_Z + 20) renderList.push({ t:103, z:n.z, cd, n });
+  }
   // only the tracks close enough to matter — saves re-scanning all of them
   // once per terrain row
   visTracks.length = 0;
@@ -1711,6 +1906,7 @@ function drawItem(o) {
     case 100: drawParticle(o.p); break;
     case 101: drawRagPart(o.p); break;
     case 102: drawSkier(); break;
+    case 103: drawNpc(o.n); break;
   }
 }
 
@@ -2086,6 +2282,107 @@ function drawSkier() {
   }
 }
 
+/* --- other skiers --- */
+function drawNpc(n) {
+  const pr = project(n.x, n.y + 0.02, n.z); if (!pr.ok) return;
+  // project() reuses one shared result object and the shadow/ski calls below
+  // clobber it — keep the base anchor in locals
+  const bx = pr.x, by = pr.y, m = pr.s, d = pr.d, f = fogAt(pr.d);
+  if (bx < -80 || bx > W + 80 || f > 0.96) return;
+
+  // far away they're just a fleck of jacket colour moving on the snow
+  if (m < 2.2) {
+    if (m < 0.5) return;
+    ctx.fillStyle = fogMix(n.c1[0], n.c1[1], n.c1[2], f);
+    if (n.downed) ctx.fillRect(bx - 0.5 * m, by - 0.3 * m, m, 0.3 * m);
+    else ctx.fillRect(bx - 0.24 * m, by - 1.45 * m, 0.48 * m, 1.45 * m);
+    return;
+  }
+  if (d < 55) contactShadow(n.x, terrainH(n.x, n.z), n.z, n.downed ? 1.1 : 0.72, 0.30);
+
+  const c = Math.cos(n.yaw), s = Math.sin(n.yaw);
+
+  if (n.downed) {
+    // a private yard sale: skis flung, body sprawled in the snow
+    ctx.fillStyle = fogMix(n.skiC[0], n.skiC[1], n.skiC[2], f);
+    const q1 = skiQuad(n.x - c * 0.7, n.y + 0.02, n.z + s * 0.7, n.yaw + 1.05, 0, 1.66, 0.10, 0.01);
+    const q2 = skiQuad(n.x + c * 0.8, n.y + 0.02, n.z - s * 0.5, n.yaw - 1.4, 0, 1.66, 0.10, 0.01);
+    for (const q of [q1, q2]) {
+      if (!q) continue;
+      ctx.beginPath(); ctx.moveTo(q[0], q[1]); ctx.lineTo(q[2], q[3]);
+      ctx.lineTo(q[4], q[5]); ctx.lineTo(q[6], q[7]); ctx.closePath(); ctx.fill();
+    }
+    ctx.save();
+    ctx.translate(bx, by); ctx.scale(m, -m);
+    ctx.fillStyle = fogMix(n.c1[0], n.c1[1], n.c1[2], f);
+    ctx.beginPath(); ctx.ellipse(0, 0.17, 0.46, 0.155, n.sprA * 0.4, 0, TAU); ctx.fill();
+    ctx.fillStyle = fogMix(n.helm[0], n.helm[1], n.helm[2], f);
+    ctx.beginPath(); ctx.arc(0.40, 0.24, 0.13, 0, TAU); ctx.fill();
+    // a hand goes up just before they climb back onto their feet
+    if (n.downT > n.getUp - 1.3) {
+      ctx.strokeStyle = fogMix(n.c2[0], n.c2[1], n.c2[2], f);
+      ctx.lineWidth = 0.085; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(-0.10, 0.28); ctx.lineTo(-0.20, 0.85); ctx.stroke();
+    }
+    ctx.restore();
+    return;
+  }
+
+  // skis
+  ctx.fillStyle = fogMix(n.skiC[0], n.skiC[1], n.skiC[2], f);
+  for (let side = -1; side <= 1; side += 2) {
+    const q = skiQuad(n.x + c * side * 0.19, n.y + 0.03, n.z - s * side * 0.19,
+                      n.yaw, -n.lean * 0.8, 1.66, 0.10, 0.01);
+    if (!q) continue;
+    ctx.beginPath(); ctx.moveTo(q[0], q[1]); ctx.lineTo(q[2], q[3]);
+    ctx.lineTo(q[4], q[5]); ctx.lineTo(q[6], q[7]); ctx.closePath(); ctx.fill();
+  }
+
+  ctx.save();
+  ctx.translate(bx, by);
+  ctx.rotate(-n.lean * 0.5);
+  ctx.scale(m, -m);
+  ctx.lineCap = 'round';
+
+  const hipY = n.stanceH, shY = hipY + 0.56, shZ = 0.17;
+  const st = 0.20;
+  // legs
+  ctx.strokeStyle = fogMix(n.c2[0], n.c2[1], n.c2[2], f);
+  ctx.lineWidth = 0.11;
+  ctx.beginPath();
+  ctx.moveTo(-st, 0.03); ctx.lineTo(-st * 0.55, hipY);
+  ctx.moveTo( st, 0.03); ctx.lineTo( st * 0.55, hipY);
+  ctx.stroke();
+  // jacket
+  ctx.fillStyle = fogMix(n.c1[0], n.c1[1], n.c1[2], f);
+  ctx.beginPath();
+  ctx.moveTo(-0.165, hipY - 0.02);
+  ctx.lineTo(-0.195 - shZ * 0.1, shY);
+  ctx.lineTo( 0.195 - shZ * 0.1, shY);
+  ctx.lineTo( 0.165, hipY - 0.02);
+  ctx.closePath(); ctx.fill();
+  // arms
+  ctx.strokeStyle = ctx.fillStyle;
+  ctx.lineWidth = 0.08;
+  ctx.beginPath();
+  ctx.moveTo(-0.18, shY - 0.04); ctx.lineTo(-0.30, shY - 0.27);
+  ctx.moveTo( 0.18, shY - 0.04); ctx.lineTo( 0.30, shY - 0.27);
+  ctx.stroke();
+  // poles
+  ctx.strokeStyle = fogMix(148, 160, 178, f);
+  ctx.lineWidth = 0.032;
+  ctx.beginPath();
+  ctx.moveTo(-0.30, shY - 0.27); ctx.lineTo(-0.41, shY - 1.02);
+  ctx.moveTo( 0.30, shY - 0.27); ctx.lineTo( 0.41, shY - 1.02);
+  ctx.stroke();
+  // helmet + goggles
+  ctx.fillStyle = fogMix(n.helm[0], n.helm[1], n.helm[2], f);
+  ctx.beginPath(); ctx.arc(-shZ * 0.15, shY + 0.15, 0.142, 0, TAU); ctx.fill();
+  ctx.fillStyle = fogMix(18, 24, 34, f);
+  ctx.beginPath(); ctx.arc(-shZ * 0.15, shY + 0.165, 0.142, Math.PI * 0.10, Math.PI * 0.90); ctx.fill();
+  ctx.restore();
+}
+
 function drawRagPart(p) {
   const pr = project(p.x, p.y, p.z); if (!pr.ok) return;
   const m = pr.s;
@@ -2296,6 +2593,7 @@ const GAME = {
     COURSE.chunks.clear(); COURSE._cacheIdx = 0;
     clearZCache();
     TRACKS.length = 0; PARTS.length = 0; ragdoll = null; lastTrackZ = -1e9;
+    NPCS.length = 0; npcSpawnT = 0;
     resetSkier();
     cam.x = S.x; cam.z = S.z - 8; cam.y = S.y + 3; cam.yaw = 0; cam.shake = 0;
     HUD.lastSec = null; HUD.toastT = 0; HUD.airT = 0;
@@ -2328,6 +2626,8 @@ const GAME = {
             your knees bent or you'll blow it.</span></div>
           <div class="ctrl"><b>BALANCE</b><span>Speed you can't hold, rough snow and washed-out edges eat your balance.
             Bend the knees to buy it back — or ragdoll down the hill.</span></div>
+          <div class="ctrl"><b>TRAFFIC</b><span>The mountain is shared. Crowds build on the groomed greens and blues
+            the further you get — and thin right out on the blacks. Hit another skier and you both go down.</span></div>
           <div class="ctrl"><b>ALSO</b><span><kbd>P</kbd> pause · <kbd>R</kbd> restart · <kbd>M</kbd> mute.
             Keep it between the orange poles.</span></div>
         </div>
@@ -2365,6 +2665,7 @@ const GAME = {
           <div class="st"><b>${Math.round(S.drop).toLocaleString()}</b><span>VERTICAL M</span></div>
           <div class="st"><b>${(Math.floor(secs / 60))}:${String(Math.floor(secs % 60)).padStart(2, '0')}</b><span>ON SNOW</span></div>
           <div class="st"><b>${S.bestAir.toFixed(1)}s</b><span>BEST AIR</span></div>
+          <div class="st"><b>${S.passes}</b><span>SKIERS PASSED</span></div>
         </div>
         <div id="grade">${grade}</div>
         <div id="best">${isBest ? '★ NEW BEST DISTANCE' : 'BEST THIS SESSION · ' + Math.round(this.best).toLocaleString() + ' m'}
@@ -2412,6 +2713,7 @@ function frame(now) {
       if (GAME.crashT > 3.1) { GAME.state = 'over'; GAME.screen('over'); }
     }
 
+    stepNpcs(sdt);
     stepParts(sdt);
     for (const t of TRACKS) t.age += sdt;
     pruneCourse(S.z);
@@ -2446,6 +2748,7 @@ function render(dt) {
     cam.yaw = Math.sin(GAME.clock * 0.17) * 0.16;
     ensureCourse(cam.z + 400); refreshKickers(cam.z); pruneCourse(cam.z);
     S.z = cam.z; S.x = cam.x;
+    stepNpcs(dt);
     buildRenderList();
     drawTerrain(horizon);
     drawSnowfall(dt);
