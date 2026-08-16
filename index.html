@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <title>FALL LINE — an endless alpine descent</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
@@ -51,6 +51,7 @@
   .key i{display:block;font-style:normal;font-size:8px;letter-spacing:.08em;opacity:.72;margin-top:2px;font-weight:700}
   #stanceTxt{margin-top:8px;font-size:11px;color:#a9c0dd;letter-spacing:.03em;height:14px}
   #edgeWrap{margin-top:8px}
+  #driftTag{float:right;font-weight:900;letter-spacing:.14em}
   #edgeBar{height:5px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:4px;
     display:flex;justify-content:center}
   #edgeL,#edgeR{height:100%;width:0%;background:linear-gradient(90deg,#fbbf24,#f97316)}
@@ -130,6 +131,58 @@
   #best{font-size:11px;color:#7f97bb;letter-spacing:.1em;margin-top:14px;font-weight:700}
   .hint{font-size:10.5px;color:#64789b;margin-top:16px;letter-spacing:.06em;line-height:1.7}
   #fps{position:absolute;left:18px;top:176px;font-size:9px;color:#546d92;letter-spacing:.1em;font-weight:700}
+
+  /* ---------- TOUCH CONTROLS ---------- */
+  /* shown only on coarse-pointer devices (body.touchmode) and only in a run */
+  #touch{position:absolute;inset:0;pointer-events:none;display:none}
+  body.touchmode #touch.on{display:block}
+  #tSteer{position:absolute;left:0;bottom:0;width:44vw;height:38vh;pointer-events:auto;
+    touch-action:none;-webkit-user-select:none;-webkit-touch-callout:none}
+  #tSteerNub{position:absolute;width:58px;height:58px;border-radius:50%;display:none;
+    border:2px solid rgba(160,200,255,.55);background:rgba(9,17,33,.35);
+    box-shadow:0 0 18px rgba(56,189,248,.25);transform:translate(-50%,-50%)}
+  #tSteerHint{position:absolute;left:16px;bottom:calc(12px + env(safe-area-inset-bottom,0px));
+    font-size:9px;letter-spacing:.16em;color:#7f97bb;font-weight:800;opacity:.7}
+  #tEff{position:absolute;right:calc(12px + env(safe-area-inset-right,0px));
+    bottom:calc(106px + env(safe-area-inset-bottom,0px));width:64px;display:flex;
+    flex-direction:column;gap:5px;pointer-events:auto;touch-action:none;
+    -webkit-user-select:none;-webkit-touch-callout:none}
+  .det{height:42px;border-radius:10px;border:1px solid rgba(160,200,255,.22);
+    background:rgba(9,17,33,.62);display:flex;flex-direction:column;align-items:center;
+    justify-content:center;font-size:11px;font-weight:900;color:#5d739a;letter-spacing:.08em}
+  .det i{font-style:normal;font-size:7.5px;letter-spacing:.1em;opacity:.7;margin-top:1px;font-weight:700}
+  .det.on{background:linear-gradient(180deg,#7dd3fc,#38bdf8);color:#04202e;border-color:#bae6fd;
+    box-shadow:0 0 14px rgba(56,189,248,.5)}
+  #tJump{position:absolute;right:calc(14px + env(safe-area-inset-right,0px));
+    bottom:calc(14px + env(safe-area-inset-bottom,0px));width:76px;height:76px;border-radius:50%;
+    pointer-events:auto;touch-action:none;display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:900;letter-spacing:.12em;color:#cfe0f7;
+    background:rgba(9,17,33,.66);border:1px solid rgba(160,200,255,.30);
+    -webkit-user-select:none;-webkit-touch-callout:none;box-shadow:0 6px 26px rgba(6,14,30,.30)}
+  #tJump.on{background:linear-gradient(180deg,#7dd3fc,#38bdf8);color:#04202e}
+  #tPause{position:absolute;left:50%;top:calc(env(safe-area-inset-top,0px) + 92px);
+    transform:translateX(-50%);width:58px;height:30px;border-radius:9px;pointer-events:auto;
+    touch-action:none;display:flex;align-items:center;justify-content:center;font-size:10px;
+    font-weight:900;color:#8fa6c6;background:rgba(9,17,33,.55);
+    border:1px solid rgba(160,200,255,.2);-webkit-user-select:none}
+
+  /* touchmode: compact the HUD and clear space for thumbs */
+  body.touchmode .panel{padding:6px 10px}
+  body.touchmode #runInfo{min-width:0;max-width:160px}
+  body.touchmode #runName{font-size:12px}
+  body.touchmode #dist{min-width:0}
+  body.touchmode #distVal{font-size:20px}
+  body.touchmode #spd{min-width:0}
+  body.touchmode #spdVal{font-size:26px}
+  body.touchmode #keys{display:none}
+  body.touchmode #stanceTxt{display:none}
+  body.touchmode #stance{left:12px;bottom:calc(38vh + 10px);min-width:0;width:172px}
+  body.touchmode #stab{right:calc(102px + env(safe-area-inset-right,0px));
+    bottom:calc(14px + env(safe-area-inset-bottom,0px));min-width:132px}
+  body.touchmode #strip{top:110px;bottom:calc(346px + env(safe-area-inset-bottom,0px))}
+  body.touchmode #alerts{width:min(420px,86vw)}
+  body.touchmode #fps{display:none}
+  @media (max-height:520px){ body.touchmode #strip{display:none} }
 </style>
 </head>
 <body>
@@ -166,7 +219,7 @@
       </div>
       <div id="stanceTxt">Standing tall — no edge</div>
       <div id="edgeWrap">
-        <div class="lbl">Edge angle <span id="edgeDeg" style="color:#cfe0f7">0°</span></div>
+        <div class="lbl">Edge angle <span id="edgeDeg" style="color:#cfe0f7">0°</span><span id="driftTag"></span></div>
         <div id="edgeBar"><div id="edgeL"></div><div id="edgeR"></div></div>
       </div>
     </div>
@@ -190,6 +243,18 @@
       <div id="warn">OFF PISTE</div>
     </div>
     <div id="fps"></div>
+  </div>
+
+  <div id="touch">
+    <div id="tSteer"><div id="tSteerNub"></div><div id="tSteerHint">HOLD &amp; SLIDE TO STEER</div></div>
+    <div id="tEff">
+      <div class="det" data-d="3">SEND<i>+TUCK</i></div>
+      <div class="det" data-d="2">DRIVE<i>EDGE</i></div>
+      <div class="det" data-d="1">FLEX<i>SOFT</i></div>
+      <div class="det on" data-d="0">TALL<i>FLAT</i></div>
+    </div>
+    <div id="tJump">JUMP</div>
+    <div id="tPause">❚❚</div>
   </div>
 
   <div id="screens">
@@ -755,10 +820,14 @@ const AU = {
       this.windGain.gain.setTargetAtTime(this.muted ? 0 : wg, this.ctx.currentTime, 0.09);
       this.windFilt.frequency.setTargetAtTime(360 + spd * 26, this.ctx.currentTime, 0.12);
       const ea = Math.abs(S.edge);
-      const cg = S.air ? 0 : clamp(S.carveNoise, 0, 1) * 0.30;
+      // a drift reads as a different SOUND, not just a louder one: the carve
+      // hiss drops into a broad low scrape as slip builds
+      const skidN = S.air ? 0 : clamp(S.skid, 0, 1);
+      const cg = S.air ? 0 : clamp(S.carveNoise, 0, 1) * 0.30 + skidN * 0.14;
       this.carveGain.gain.setTargetAtTime(this.muted ? 0 : cg, this.ctx.currentTime, 0.05);
-      this.carveFilt.frequency.setTargetAtTime(900 + ea * 2600 + spd * 34, this.ctx.currentTime, 0.06);
-      this.carveFilt.Q.setTargetAtTime(0.9 + ea * 3.4, this.ctx.currentTime, 0.1);
+      this.carveFilt.frequency.setTargetAtTime(
+        Math.max(320, 900 + ea * 2600 + spd * 34 - skidN * 2100), this.ctx.currentTime, 0.06);
+      this.carveFilt.Q.setTargetAtTime(Math.max(0.6, 0.9 + ea * 3.4 - skidN * 2.4), this.ctx.currentTime, 0.1);
       const ch = S.air ? 0 : clamp(S.chatter, 0, 1) * 0.30;
       this.chatterGain.gain.setTargetAtTime(this.muted ? 0 : ch, this.ctx.currentTime, 0.05);
     }
@@ -862,7 +931,12 @@ const AU = {
 
 /* ================================================================ INPUT === */
 const keys = Object.create(null);
-const IN = { steer:0, effort:0, q:false, w:false, e:false, pop:false };
+/* popT is a timestamp, not a flag: a jump tapped a few frames early still
+   fires on touchdown, which matters for hop-turn timing (and for touch). */
+const IN = { steer:0, effort:0, q:false, w:false, e:false, popT:-1 };
+/* touch state lives apart from the keyboard and is merged in readInput() —
+   the two never clobber each other, and a phone with a BT keyboard gets both */
+const TOUCH = { steer:0, effort:0, ptrs:new Map(), ax:0, ay:0, padRect:null, effRect:null };
 addEventListener('keydown', ev => {
   const k = ev.key.toLowerCase();
   if ([' ','arrowleft','arrowright','arrowup','arrowdown','q','w','e','r','p','escape'].includes(k)) ev.preventDefault();
@@ -878,9 +952,11 @@ addEventListener('blur', () => { for (const k in keys) keys[k] = false; });
 
 function readInput() {
   const l = keys['arrowleft'] || keys['a'], r = keys['arrowright'] || keys['d'];
-  IN.steer = (r ? 1 : 0) - (l ? 1 : 0);
-  IN.q = !!keys['q']; IN.w = !!keys['w']; IN.e = !!keys['e'];
-  IN.effort = (IN.q ? 1 : 0) + (IN.w ? 1 : 0) + (IN.e ? 1 : 0);
+  const kbSteer = (r ? 1 : 0) - (l ? 1 : 0);
+  const kbEff = (keys['q'] ? 1 : 0) + (keys['w'] ? 1 : 0) + (keys['e'] ? 1 : 0);
+  IN.steer = clamp(kbSteer + TOUCH.steer, -1, 1);
+  IN.effort = Math.max(kbEff, TOUCH.effort);
+  IN.q = IN.effort >= 1; IN.w = IN.effort >= 2; IN.e = IN.effort >= 3;
 }
 
 /* =============================================================== SKIER ==== */
@@ -890,6 +966,10 @@ const S = {
   edge:0,             // signed edge engagement, -1..1
   steerS:0,           // smoothed steering input
   crouch:0,           // 0 tall .. 1 tuck
+  slip:0,             // signed angle between velocity and ski heading, rad
+  tuckT:0, tuckS:0,   // time in tuck; smoothed "folded up" state, 0..1
+  unweight:0,         // post-pop window while still grounded: skis unloaded
+  popAir:false,       // this airtime was deliberate (popped), not a surprise roller
   speed:0, air:false, airT:0, airTotal:0, bestAir:0,
   onGround:true, risk:0, lat:0, skid:0, carveNoise:0, chatter:0, gForce:1,
   edgeAngle:0, tuck:false, offPiste:0, popCd:0, lastPop:0, stuckT:0,
@@ -902,9 +982,11 @@ function resetSkier() {
   S.z = 0; S.x = centerAt(0); S.y = terrainH(S.x, S.z);
   S.vx = 0; S.vy = 0; S.vz = 2.4;
   S.yaw = 0; S.edge = 0; S.steerS = 0; S.crouch = 0;
+  S.slip = 0; S.tuckT = 0; S.tuckS = 0; S.unweight = 0; S.popAir = false;
   S.speed = 2.4; S.air = false; S.airT = 0; S.airTotal = 0; S.bestAir = 0;
   S.onGround = true; S.risk = 0; S.lat = 0; S.skid = 0; S.carveNoise = 0; S.chatter = 0;
   S.gForce = 1; S.edgeAngle = 0; S.tuck = false; S.offPiste = 0; S.popCd = 0; S.stuckT = 0;
+  IN.popT = -1;
   S.dist = 0; S.drop = 0; S.startY = S.y; S.maxSpeed = 0; S.time = 0; S.alive = true; S.maxDiff = 0;
   S.passes = 0;
 }
@@ -919,8 +1001,19 @@ function stepPhysics(dt) {
   S.crouch += (crouchTarget - S.crouch) * Math.min(1, dt * 9);
   S.tuck = (eff === 3 && steerIn === 0 && !S.air);
 
+  /* Coming out of a sustained tuck takes a beat: you have to rise before the
+     edges can bite. tuckS only builds after ~0.4s of committed tuck (so the
+     constant micro-steering of corridor-following never trips it) and drains
+     over ~200 ms once you steer out. It scales edge ENGAGEMENT, never input —
+     the skis always respond visibly, the bite is what lags. */
+  S.tuckT = S.tuck ? S.tuckT + dt : 0;
+  const tuckTarget = (S.tuck && S.tuckT > 0.4) ? 1 : 0;
+  S.tuckS += (tuckTarget - S.tuckS) * Math.min(1, dt * (tuckTarget ? 6 : 5));
+  const tuckMul = 1 - 0.6 * S.tuckS;
+
   /* ---- steering & edge set ---- */
-  const rate = PHYS.EDGE_RATE[eff];
+  const spNow = Math.hypot(S.vx, S.vy, S.vz);
+  const rate = PHYS.EDGE_RATE[eff] * lerp(1, 0.72, sstep(14, 30, spNow));
   S.steerS += (steerIn - S.steerS) * Math.min(1, dt * rate);
   if (Math.abs(steerIn) < 0.01) S.steerS *= Math.max(0, 1 - dt * (2.0 + eff * 1.6));
   S.edge = S.steerS;
@@ -949,6 +1042,16 @@ function stepPhysics(dt) {
         if (impact > cap * 1.55) return crash('BLEW THE LANDING');
         S.risk += (impact - cap) / cap * 0.65;
       }
+      /* Momentum doesn't care where the skis point: land with them across
+         the direction of travel and you keep going that way. Harmless at
+         hop-turn speeds, expensive at pace, fatal near-sideways at speed. */
+      const hsp = Math.hypot(S.vx, S.vz);
+      const landSlip = Math.abs(Math.atan2(
+        Math.sin(Math.atan2(S.vx, S.vz) - S.yaw),
+        Math.cos(Math.atan2(S.vx, S.vz) - S.yaw)));
+      if (landSlip > 65 * DEG && hsp > 18) return crash('LANDED SIDEWAYS');
+      S.risk += sstep(20 * DEG, 75 * DEG, landSlip) * sstep(7, 20, hsp) * (0.65 - 0.10 * eff);
+      if (landSlip > 20 * DEG && hsp > 5) spray(Math.min(40, hsp * 1.5), 1.2);
       if (impact > 1.6) {
         AU.land(impact);
         spray(Math.min(46, impact * 3.2), 1.5);
@@ -956,6 +1059,7 @@ function stepPhysics(dt) {
       }
       if (S.airT > 0.28) { S.bestAir = Math.max(S.bestAir, S.airT); HUD.airPop(S.airT); }
       S.airTotal += S.airT;
+      S.popAir = false;
       // scrub some speed on a heavy landing, less if the legs were loaded
       const scrub = clamp((impact - cap * 0.4) / 14, 0, 0.34) * (1 - eff * 0.16);
       S.vx *= 1 - scrub; S.vy *= 1 - scrub; S.vz *= 1 - scrub;
@@ -994,27 +1098,50 @@ function stepPhysics(dt) {
     S.lat = vl;
     const sp = Math.hypot(S.vx, S.vy, S.vz);
 
-    /* -- edge grip: resist the sideways slide, up to what the edges hold -- */
-    const engage = 0.16 + 0.84 * Math.abs(S.edge);
+    /* -- slip: the angle between where the skis point and where you're
+          actually going. The whole drift model hangs off this one number.
+          Gated at walking pace where the ratio is numerical noise.       -- */
+    const slip = sp < 2 ? 0 : Math.atan2(vl, vf);
+    const aslip = Math.abs(slip);
+    S.slip = slip;
+
+    /* -- edge grip: resist the sideways slide, up to what the edges hold.
+          Hold degrades with speed (hard snow, chatter), vanishes while the
+          skis are unweighted, and — like tyre cornering stiffness — the
+          force builds progressively with slip instead of slamming on, so a
+          tap of steering nudges you instead of jerking you sideways.     -- */
+    const engage = (0.16 + 0.84 * Math.abs(S.edge)) * tuckMul;
     const snowGrip = lerp(1, 0.62, S.offPiste);      // powder holds an edge poorly
-    const gripMax = PHYS.GRIP[eff] * gN * engage * snowGrip;
+    const gripSpeed = 1 - 0.5 * sstep(7, 16.7, sp);   // full hold to ~25 km/h, halved by 60
+    const gripMax = PHYS.GRIP[eff] * gN * engage * snowGrip * gripSpeed
+                    * (1 - 0.5 * S.unweight);
     const need = Math.abs(vl) / Math.max(dt, 1e-4);
-    const applied = Math.min(need, gripMax);
+    const gripRamp = sp < 2 ? 1 : clamp(0.15 + aslip / (6 * DEG), 0, 1);
+    const applied = Math.min(need, gripMax * gripRamp);
     const sgn = vl > 0 ? -1 : 1;
     ax += sgn * applied * lx; ay += sgn * applied * ly; az += sgn * applied * lz;
 
-    S.skid = clamp(Math.abs(vl) / 5.5, 0, 1);
+    S.skid = clamp(aslip / (50 * DEG), 0, 1) * clamp(sp / 6, 0, 1);
 
-    /* -- skidding also drags the skis back: this is how you scrub speed -- */
-    const skidDrag = (0.30 + 0.55 * Math.abs(S.edge)) * (0.4 + eff * 0.28) * gN
-                     * clamp(Math.abs(vl) / 2.4, 0, 1.6);
+    /* -- a ski travelling sideways ploughs snow, and the cost scales with
+          how far sideways: a working drift scrubs a little, a full slash
+          scrubs ~1 g. This is the speed-management tool at pace. The plough
+          saturates at speed — the ski skips and chatters over the surface
+          instead of digging in — so a 100 km/h slash is a long controlled
+          scrub, not a 2 g wall.                                          -- */
+    const plough = lerp(1, 0.5, sstep(10, 26, sp));
+    const skidDrag = (0.35 + 0.65 * Math.abs(S.edge)) * (0.45 + 0.25 * eff) * gN
+                     * 1.1 * Math.sin(Math.min(aslip, 90 * DEG)) * clamp(sp / 4, 0, 1) * plough;
 
-    /* -- an edged ski held across the fall line ploughs snow. This is the
-          actual brake: turn shape controls speed, and holding the turn past
-          ~40° off the fall line is what brings you to a stop.             -- */
-    const across = clamp((Math.abs(S.yaw) - 42 * DEG) / (45 * DEG), 0, 1);
+    /* -- the plough brake proper: keyed on slip at speed — a clean carved
+          traverse displaces no snow no matter how far across the hill it
+          points, while a hockey-stop slash (slip near 90°) does. Below
+          ~6 m/s the old heading-based plough returns, so the final settle
+          of a stop (and a snowplough crawl) still brings you to rest.    -- */
+    const across = Math.max(sstep(35 * DEG, 80 * DEG, aslip),
+      clamp((Math.abs(S.yaw) - 42 * DEG) / (45 * DEG), 0, 1) * (1 - sstep(6, 12, sp)));
     const brake = across * Math.abs(S.steerS) * (0.10 + 0.72 * (eff / 3))
-                  * (0.30 + 0.70 * Math.abs(S.edge)) * gN * clamp(sp / 2.5, 0, 1);
+                  * (0.30 + 0.70 * Math.abs(S.edge)) * gN * clamp(sp / 2.5, 0, 1) * plough;
 
     /* -- base friction + air drag -- */
     const mu = lerp(PHYS.MU_PISTE, PHYS.MU_POWDER, S.offPiste)
@@ -1028,18 +1155,41 @@ function stepPhysics(dt) {
       ax -= rx * dv; ay -= ry * dv; az -= rz * dv;
     }
 
-    /* -- yaw: carving radius from the sidecut, plus skidded pivot -- */
+    /* -- yaw: carving radius from the sidecut, plus skidded pivot.
+          The carve can only bend the path as hard as the edges can hold
+          (v²/R ≤ grip), and a ski already sliding sideways cannot re-rail —
+          so at speed the skis rotate ahead of the trajectory and you drift
+          rather than turn. Rotating the skis stays easy; going where they
+          point is what speed takes away.                                 -- */
     const phi = S.edgeAngle;
     const R = Math.max(3.0, PHYS.R_SIDECUT * Math.cos(phi));
-    const wCarve = (Math.abs(vf) / R) * Math.abs(S.edge) * (0.35 + 0.65 * (eff / 3));
+    const carveEff = 1 - sstep(5 * DEG, 22 * DEG, aslip);
+    const wCarve = Math.min((Math.abs(vf) / R) * Math.abs(S.edge) * (0.35 + 0.65 * (eff / 3)),
+                            gripMax / Math.max(sp, 0.5)) * carveEff;
     // Pivot authority never drops to zero: stopped and sideways across the
     // hill you must still be able to step the skis back to the fall line.
-    const wPivot = PHYS.PIVOT[eff] * Math.abs(S.edge) * clamp(0.30 + sp / 5.5, 0, 1);
-    S.yaw += Math.sign(S.edge) * (wCarve + wPivot) * dt;
-    // Flat skis can't hold a traverse — gravity washes the tails downhill and
-    // points you back down the fall line. Also true at a standstill.
-    if (Math.abs(S.edge) < 0.06)
+    // Steering that pushes the drift DEEPER saturates hard as slip reaches
+    // the speed-dependent envelope — the residual has to stay BELOW the rate
+    // grip rotates the trajectory, or the drift never stabilises and every
+    // committed turn spins out. Counter-steering to recover keeps full
+    // authority, and below ~15 m/s the envelope exceeds 100°, so the hockey
+    // stop is untouched.
+    const slipMax = lerp(110 * DEG, 50 * DEG, sstep(12, 28, sp));
+    const deepens = slip === 0 || Math.sign(S.edge) !== Math.sign(slip);
+    const sat = deepens ? 1 - 0.97 * sstep(0.7 * slipMax, 1.05 * slipMax, aslip) : 1;
+    const wPivot = PHYS.PIVOT[eff] * Math.abs(S.edge) * clamp(0.30 + sp / 5.5, 0, 1)
+                   * tuckMul * (1 + 1.5 * S.unweight);
+    S.yaw += Math.sign(S.edge) * (wCarve + wPivot) * sat * dt;
+    if (Math.abs(S.edge) < 0.06 && sp < 2) {
+      // at a standstill gravity washes the tails downhill and points the
+      // skis back down the fall line
       S.yaw -= S.yaw * dt * (0.55 - eff * 0.11) * clamp(0.35 + sp / 8, 0, 1);
+    } else if (Math.abs(S.edge) < 0.2) {
+      // flat unweighted skis weathervane toward the direction of travel —
+      // release after a tap and they swing back in line instead of hanging
+      // sideways bleeding speed
+      S.yaw += slip * lerp(1.5, 4.0, sstep(3, 15, sp)) * dt;
+    }
     S.yaw = clamp(S.yaw, -102 * DEG, 102 * DEG);
 
     S.gForce = Math.hypot(applied, gN) / PHYS.G;
@@ -1047,10 +1197,10 @@ function stepPhysics(dt) {
                          + across * Math.abs(S.steerS) * clamp(sp / 9, 0, 1) * 0.8, 0, 1.3);
     S.chatter = clamp((p.mogul * 0.7 + p.rough * 0.35 + S.offPiste * 0.5) * (sp / 18), 0, 1);
 
-    /* -- spray from the edges -- */
+    /* -- spray from the edges, biased off the ploughing side -- */
     if (sp > 3 && (S.skid > 0.06 || Math.abs(S.edge) > 0.3 || across > 0.15))
       spray((S.skid * 26 + Math.abs(S.edge) * 7 + across * Math.abs(S.steerS) * 20)
-            * dt * 60 * 0.35, 0.55 + S.skid + across * 0.5);
+            * dt * 60 * 0.35, 0.55 + S.skid + across * 0.5, Math.sign(vl));
 
     /* -- balance erosion -- */
     // A tuck is stable but it is not a licence to straight-line: you are on
@@ -1060,8 +1210,11 @@ function stepPhysics(dt) {
     if (sp > comfort) load += (sp - comfort) / comfort * 1.5;
     const rough = p.mogul * 0.95 + p.rough * 0.55 + S.offPiste * 1.25;
     load += rough * clamp((sp - comfort * 0.45) / comfort, 0, 2) * (S.tuck ? 1.75 : 1.15);
-    load += clamp(Math.abs(vl) / (2.6 + eff * 3.4) - 0.55, 0, 2) * 0.85;
-    if (need > gripMax * 1.05 && sp > 12) load += 0.35;        // edges washing out
+    // Drifting is meant to be the normal state at speed, so balance is loaded
+    // by slip ANGLE past an effort-scaled dead zone — a working drift is free
+    // riding; only pushing toward over-rotation erodes you.
+    load += clamp((aslip - (10 + 4 * eff) * DEG) / (30 * DEG), 0, 1.6) * (0.55 + sp / 40);
+    load += 0.45 * sstep(0.80 * slipMax, 1.05 * slipMax, aslip);   // over-rotated past the envelope
     S.risk += (load - (0.42 + eff * 0.40)) * dt;
     S.risk = clamp(S.risk, 0, 1.05);
     if (S.risk >= 1) return crash(S.offPiste > 0.5 ? 'BURIED THE TIPS' : 'CAUGHT AN EDGE');
@@ -1084,23 +1237,34 @@ function stepPhysics(dt) {
       S.vx += clamp(toC * 0.25, -1.6, 1.6) * dt;
     }
 
-    /* -- pop / unweight -- */
+    /* -- pop / unweight / hop-turn -- */
     S.popCd = Math.max(0, S.popCd - dt);
-    if (IN.pop && S.popCd <= 0) {
+    S.unweight = Math.max(0, S.unweight - dt / 0.25);
+    if (IN.popT >= 0 && S.time - IN.popT < 0.12 && S.popCd <= 0) {
       const v = PHYS.POP[eff];
       S.vx += nx * v; S.vy += ny * v; S.vz += nz * v;
-      S.y += 0.06; S.popCd = 0.35; AU.pop(); IN.pop = false;
+      S.y += 0.06; S.popCd = 0.35; AU.pop(); IN.popT = -1;
+      S.unweight = 1;                  // skis unloaded: pivot freely, grip poorly
+      S.popAir = true;                 // any air that follows is deliberate
+      S.tuckS = 0; S.tuckT = 0;        // a pre-hop pops you straight out of the tuck
+      // popping WITH steering holds a pre-rotation and delivers it as a hop:
+      // the unweighted-pivot turn. At low speed this is the fastest way round.
+      if (steerIn !== 0) S.yaw += steerIn * (0.30 + 0.15 * eff);
     }
   } else {
-    IN.pop = false;
-    // in the air: gravity + drag only, and you can steer the skis a little
+    // in the air: gravity + drag only — but with nothing loading the skis,
+    // swinging them round is easy at ANY effort (raw input, no edge-set lag).
+    // Full authority needs INTENT though: in a popped air it's immediate; in a
+    // surprise roller hop it ramps in, so holding a steer over a bump doesn't
+    // silently rotate you into a sideways landing.
     const sp = Math.hypot(S.vx, S.vy, S.vz);
     const cda = S.tuck || eff === 3 ? PHYS.CDA_TUCK * 1.25 : PHYS.CDA[eff];
     const drag = 0.5 * PHYS.RHO * cda * sp * sp / PHYS.M;
     if (sp > 0.02) { ax -= S.vx / sp * drag; ay -= S.vy / sp * drag; az -= S.vz / sp * drag; }
-    S.yaw += S.steerS * (0.7 + eff * 0.25) * dt;
+    S.yaw += steerIn * (1.6 + 0.45 * eff) * (S.popAir ? 1 : sstep(0.15, 0.5, S.airT)) * dt;
     S.yaw = clamp(S.yaw, -102 * DEG, 102 * DEG);
     S.skid *= Math.max(0, 1 - dt * 3);
+    S.slip *= Math.max(0, 1 - dt * 3);
     S.carveNoise *= Math.max(0, 1 - dt * 5);
     S.chatter = 0;
     S.gForce = 0;
@@ -1411,11 +1575,12 @@ function checkNpcCollisions() {
 
 /* =========================================================== PARTICLES ==== */
 const PARTS = [];
-function spray(n, power) {
+function spray(n, power, bias) {
   n = Math.min(n | 0, 90);
   for (let i = 0; i < n; i++) {
     if (PARTS.length > 320) break;
-    const side = Math.random() < 0.5 ? -1 : 1;
+    // bias throws most of the snow off the ploughing edge in a drift
+    const side = bias && Math.random() < 0.78 ? bias : (Math.random() < 0.5 ? -1 : 1);
     const a = S.yaw + side * (0.6 + Math.random() * 1.1);
     const sp = power * rnd(1.4, 5.2);
     PARTS.push({
@@ -1462,7 +1627,12 @@ function updateCamera(dt) {
   // swing round to the side for the wipeout: keeps whatever you hit out of
   // the way and shows the tumble properly
   if (crashing) cam.crashYaw += dt * 0.30 * cam.crashSide;
-  const wantYaw = crashing ? cam.crashYaw : clamp(S.yaw * 0.30 + S.steerS * 0.10, -0.28, 0.28);
+  // Lead with the direction of TRAVEL, not the skis: in a drift the world
+  // flow stays with your momentum while the skier visibly rotates across the
+  // screen — that divergence is how you read the skid.
+  const velYaw = S.speed > 2 ? Math.atan2(S.vx, S.vz) : S.yaw;
+  const wantYaw = crashing ? cam.crashYaw
+                : clamp(velYaw * 0.22 + S.yaw * 0.08 + S.steerS * 0.08, -0.28, 0.28);
   cam.yaw += (wantYaw - cam.yaw) * Math.min(1, dt * (crashing ? 1.6 : 3.4));
 
   const tz = T.z - cam.dist * Math.cos(cam.yaw);
@@ -2475,7 +2645,7 @@ const HUD = {
   el: {}, lastSec: null, toastT: 0, airT: 0, stripSecs: [],
   init() {
     for (const id of ['hud','runName','diffPill','diffTxt','diffGlyph','pitchRead','distVal','dropVal',
-      'spdVal','spdSub','gforceF','kQ','kW','kE','stanceTxt','edgeDeg','edgeL','edgeR','stabF','stabTxt',
+      'spdVal','spdSub','gforceF','kQ','kW','kE','stanceTxt','edgeDeg','edgeL','edgeR','driftTag','stabF','stabTxt',
       'toast','toastDiff','toastName','toastSub','airTime','warn','strip','stripMe','fps'])
       this.el[id] = $(id);
   },
@@ -2548,6 +2718,11 @@ const HUD = {
     e.edgeL.style.width = eL / 2 + '%';
     e.edgeR.style.width = eR / 2 + '%';
 
+    const slipDeg = Math.abs(S.slip) / DEG;
+    e.driftTag.textContent = (!S.air && S.speed > 8 && slipDeg > 15)
+      ? (slipDeg > 40 ? 'SKID' : 'DRIFT') : '';
+    e.driftTag.style.color = slipDeg > 40 ? '#f87171' : '#fbbf24';
+
     e.stabF.style.width = clamp(S.risk, 0, 1) * 100 + '%';
     e.stabTxt.textContent = S.risk > 0.82 ? 'ABOUT TO GO' : S.risk > 0.55 ? 'GETTING LOOSE'
       : S.risk > 0.28 ? 'WORKING' : 'SOLID';
@@ -2578,7 +2753,7 @@ const GAME = {
   space() {
     if (this.state === 'title' || this.state === 'over') { this.start(); return; }
     if (this.state === 'paused') { this.togglePause(); return; }
-    if (this.state === 'run') IN.pop = true;
+    if (this.state === 'run') IN.popT = S.time;
   },
   togglePause() {
     if (this.state === 'run') { this.state = 'paused'; this.screen('pause'); }
@@ -2601,11 +2776,13 @@ const GAME = {
     this.state = 'run';
     this.hideScreen();
     $('hud').className = 'on';
+    $('touch').className = 'on';
   },
 
   hideScreen() { $('screens').className = 'hide'; },
   screen(kind) {
     const c = $('card');
+    const T = document.body.classList.contains('touchmode');
     if (kind === 'title') {
       c.innerHTML = `
         <h1>FALL&nbsp;LINE</h1>
@@ -2615,34 +2792,41 @@ const GAME = {
         <em>no fall zone</em>. Every metre is generated as you reach it — pitch, moguls, rollers,
         trees, lift line and all.</p>
         <div class="ctrls">
-          <div class="ctrl"><b>STEER</b><span><kbd>←</kbd><kbd>→</kbd> lean into the turn. Hold longer to bring
-            the skis further across the fall line.</span></div>
-          <div class="ctrl"><b>EFFORT — Q / W / E</b><span>Nothing pressed = standing tall, skis flat, barely a turn.
-            <kbd>Q</kbd> soft knees. <kbd>Q</kbd><kbd>W</kbd> real edge — hold a direction and you'll come parallel and stop.
-            <kbd>Q</kbd><kbd>W</kbd><kbd>E</kbd> everything you've got: instant edge, sharp turn.</span></div>
-          <div class="ctrl"><b>TUCK</b><span><kbd>Q</kbd><kbd>W</kbd><kbd>E</kbd> with no steering folds you into a
-            racing tuck — drag drops through the floor and the speed goes silly.</span></div>
-          <div class="ctrl"><b>POP</b><span><kbd>SPACE</kbd> unweights the skis. More effort = more pop. Land with
-            your knees bent or you'll blow it.</span></div>
-          <div class="ctrl"><b>BALANCE</b><span>Speed you can't hold, rough snow and washed-out edges eat your balance.
+          <div class="ctrl"><b>STEER</b><span>${T
+            ? 'Hold the bottom-left pad and slide your thumb. Hold longer to bring the skis further round.'
+            : '<kbd>←</kbd><kbd>→</kbd> lean into the turn. Hold longer to bring the skis further across the fall line.'}</span></div>
+          <div class="ctrl"><b>EFFORT${T ? '' : ' — Q / W / E'}</b><span>${T
+            ? 'The column on the right: TALL = skis flat, barely a turn. FLEX soft knees. DRIVE real edge — hold a direction and you\'ll come parallel and stop. SEND everything you\'ve got.'
+            : 'Nothing pressed = standing tall, skis flat, barely a turn. <kbd>Q</kbd> soft knees. <kbd>Q</kbd><kbd>W</kbd> real edge — hold a direction and you\'ll come parallel and stop. <kbd>Q</kbd><kbd>W</kbd><kbd>E</kbd> everything you\'ve got.'}</span></div>
+          <div class="ctrl"><b>DRIFT</b><span>Speed is momentum. The skis swing round easily at pace, but the edges
+            can't hold everything you ask — you drift, skis pointing one way, momentum carrying you on.
+            Throw them properly sideways to scrub speed. Watch the <b style="display:inline;color:#fbbf24">DRIFT/SKID</b> tag.</span></div>
+          <div class="ctrl"><b>TUCK</b><span>${T ? 'SEND' : '<kbd>Q</kbd><kbd>W</kbd><kbd>E</kbd>'} with no steering folds
+            you into a racing tuck — drag drops through the floor and the speed goes silly. You must rise out of it
+            before the edges bite again.</span></div>
+          <div class="ctrl"><b>POP &amp; HOP-TURN</b><span>${T ? 'JUMP' : '<kbd>SPACE</kbd>'} unweights the skis — more
+            effort, more pop. Unweighted skis pivot freely: pop <em>while steering</em> to hop the skis round. At low
+            speed it's the fastest way to turn. Land straight at speed, or else.</span></div>
+          <div class="ctrl"><b>BALANCE</b><span>Speed you can't hold, rough snow and over-rotated skids eat your balance.
             Bend the knees to buy it back — or ragdoll down the hill.</span></div>
           <div class="ctrl"><b>TRAFFIC</b><span>The mountain is shared. Crowds build on the groomed greens and blues
             the further you get — and thin right out on the blacks. Hit another skier and you both go down.</span></div>
-          <div class="ctrl"><b>ALSO</b><span><kbd>P</kbd> pause · <kbd>R</kbd> restart · <kbd>M</kbd> mute.
-            Keep it between the orange poles.</span></div>
+          <div class="ctrl"><b>ALSO</b><span>${T ? 'The ❚❚ chip pauses.'
+            : '<kbd>P</kbd> pause · <kbd>R</kbd> restart · <kbd>M</kbd> mute.'} Keep it between the orange poles.</span></div>
         </div>
         <div class="legend">
           ${DIFFS.map(d => `<span class="lg"><i style="background:${d.col};border-radius:${d.shape === 'circle' ? '50%' : '0'};
             ${d.shape === 'diamond' || d.shape === 'double' ? 'transform:rotate(45deg)' : ''}"></i>${d.label}
             <span style="color:#64789b;font-weight:700">${d.slope[0]}–${d.slope[1]}°</span></span>`).join('')}
         </div>
-        <div class="go">PRESS SPACE TO DROP IN</div>
+        <div class="go">${T ? 'TAP TO DROP IN' : 'PRESS SPACE TO DROP IN'}</div>
         <div class="hint">Sound is generated live and reacts to your speed — headphones recommended.</div>`;
     } else if (kind === 'pause') {
       c.innerHTML = `<h1 style="font-size:52px">PAUSED</h1>
         <div class="tag">${Math.round(S.dist)} M DOWN · ${Math.round(S.maxSpeed * 3.6)} KM/H TOP</div>
-        <div class="go">PRESS SPACE OR P TO CARRY ON</div>
-        <div class="hint"><kbd>R</kbd> to start a fresh descent.</div>`;
+        ${T ? `<div><span class="btn" onclick="GAME.togglePause()">CARRY ON</span><span class="btn ghost" onclick="GAME.start()">RESTART</span></div>`
+            : `<div class="go">PRESS SPACE OR P TO CARRY ON</div>
+        <div class="hint"><kbd>R</kbd> to start a fresh descent.</div>`}`;
     } else if (kind === 'over') {
       const avg = S.time > 0.5 ? (S.dist / S.time) * 3.6 : 0;
       const secs = Math.max(1, S.time);
@@ -2671,10 +2855,10 @@ const GAME = {
         <div id="best">${isBest ? '★ NEW BEST DISTANCE' : 'BEST THIS SESSION · ' + Math.round(this.best).toLocaleString() + ' m'}
           &nbsp;·&nbsp; DEEPEST PISTE REACHED · <span style="color:${deepest.col === '#000000' ? '#94a3b8' : deepest.col}">${deepest.label}</span></div>
         <div><span class="btn" onclick="GAME.start()">DROP IN AGAIN</span></div>
-        <div class="hint">or press <kbd>R</kbd> / <kbd>SPACE</kbd></div>`;
+        <div class="hint">${T ? 'or tap anywhere' : 'or press <kbd>R</kbd> / <kbd>SPACE</kbd>'}</div>`;
     }
     $('screens').className = '';
-    if (kind === 'over') $('hud').className = '';
+    if (kind === 'over') { $('hud').className = ''; $('touch').className = ''; }
   },
 };
 
@@ -2726,7 +2910,8 @@ function frame(now) {
 }
 
 function render(dt) {
-  if (W !== Math.floor(innerWidth * DPR)) resize();
+  // height changes alone too — iOS URL-bar collapse never fires a width change
+  if (W !== Math.floor(innerWidth * DPR) || H !== Math.floor(innerHeight * DPR)) resize();
   focal = (H * 0.5) / Math.tan((0.92 + cam.fovBoost) * 0.5);
   const sk = cam.shake;
   shakeX = (Math.random() - 0.5) * sk * 14 * DPR;
@@ -2768,7 +2953,108 @@ requestAnimationFrame(frame);
 const unlock = () => { AU.init(); AU.resume(); removeEventListener('pointerdown', unlock); removeEventListener('keydown', unlock); };
 addEventListener('pointerdown', unlock);
 addEventListener('keydown', unlock);
-$('screens').addEventListener('pointerdown', e => { if (e.target.id === 'screens' || e.target.id === 'card') GAME.space(); });
+// a tap anywhere on an overlay screen (except an actual button, which handles
+// itself) acts as SPACE: start, resume, drop in again
+$('screens').addEventListener('pointerdown', e => { if (!e.target.closest('.btn')) GAME.space(); });
+
+/* ====================================================== TOUCH CONTROLS ==== */
+function enableTouch() {
+  if (document.body.classList.contains('touchmode')) return;
+  document.body.classList.add('touchmode');
+  if (GAME.state === 'title') GAME.screen('title');   // swap the copy to touch wording
+  else if (GAME.state !== 'over') $('touch').className = 'on';  // hybrid device, mid-run
+}
+// coarse-pointer devices get the controls up front; hybrids (touchscreen
+// laptops, iPad+trackpad) get them on the first actual touch. Never disabled —
+// keyboard input merges in readInput, so phone + BT keyboard keeps both.
+if (matchMedia('(hover: none) and (pointer: coarse)').matches) enableTouch();
+addEventListener('pointerdown', e => { if (e.pointerType === 'touch') enableTouch(); });
+
+const tSteer = $('tSteer'), tSteerNub = $('tSteerNub'), tEff = $('tEff'),
+      tJump = $('tJump'), tPause = $('tPause');
+const tDets = Array.from(tEff.querySelectorAll('.det'));
+
+/* Steering pad: drag-relative. Thumb offset from touch-down maps to steer in
+   [-1,1]; the deadband outputs EXACTLY 0 so tuck (steer === 0), stuck-escape
+   and the parked hockey-stop behave identically to keyboard. Handlers store
+   numbers; the nub is one absolutely-positioned div. */
+tSteer.addEventListener('pointerdown', e => {
+  tSteer.setPointerCapture(e.pointerId);
+  TOUCH.ptrs.set(e.pointerId, 'steer');
+  TOUCH.ax = e.clientX; TOUCH.ay = e.clientY; TOUCH.steer = 0;
+  TOUCH.padRect = tSteer.getBoundingClientRect();
+  tSteerNub.style.display = 'block';
+  tSteerNub.style.left = (TOUCH.ax - TOUCH.padRect.left) + 'px';
+  tSteerNub.style.top = (TOUCH.ay - TOUCH.padRect.top) + 'px';
+});
+tSteer.addEventListener('pointermove', e => {
+  if (TOUCH.ptrs.get(e.pointerId) !== 'steer') return;
+  const dx = e.clientX - TOUCH.ax;
+  const DEAD = 12, FULL = 58;
+  TOUCH.steer = Math.abs(dx) < DEAD ? 0
+    : clamp((dx - Math.sign(dx) * DEAD) / (FULL - DEAD), -1, 1);
+  tSteerNub.style.left = (TOUCH.ax - TOUCH.padRect.left + clamp(dx, -FULL, FULL)) + 'px';
+});
+const steerEnd = e => {
+  if (TOUCH.ptrs.get(e.pointerId) !== 'steer') return;
+  TOUCH.ptrs.delete(e.pointerId); TOUCH.steer = 0;
+  tSteerNub.style.display = 'none';
+};
+tSteer.addEventListener('pointerup', steerEnd);
+tSteer.addEventListener('pointercancel', steerEnd);
+tSteer.addEventListener('lostpointercapture', steerEnd);
+
+/* Effort column: four latching detents (the PHYS arrays are indexed by whole
+   effort levels — fractional effort is not a thing). Tap one, or flick
+   through them in a single vertical drag; hysteresis stops a resting thumb
+   flickering between stances. Latched on release, like it looks. */
+function setEffDet(d) {
+  d = clamp(d, 0, 3);
+  if (d === TOUCH.effort) return;
+  TOUCH.effort = d;
+  for (const el of tDets) el.classList.toggle('on', +el.dataset.d === d);
+}
+function effFromEvent(e) {
+  const r = TOUCH.effRect;
+  const f = clamp((r.bottom - e.clientY) / r.height, 0, 0.999);
+  const raw = f * 4 - 0.5;                         // detent centres land on 0..3
+  if (Math.abs(raw - TOUCH.effort) > 0.62) setEffDet(Math.round(raw));
+}
+tEff.addEventListener('pointerdown', e => {
+  tEff.setPointerCapture(e.pointerId);
+  TOUCH.ptrs.set(e.pointerId, 'eff');
+  TOUCH.effRect = tEff.getBoundingClientRect();
+  const hit = e.target.closest('.det');
+  if (hit) setEffDet(+hit.dataset.d); else effFromEvent(e);
+});
+tEff.addEventListener('pointermove', e => {
+  if (TOUCH.ptrs.get(e.pointerId) === 'eff') effFromEvent(e);
+});
+const effEnd = e => { TOUCH.ptrs.delete(e.pointerId); };
+tEff.addEventListener('pointerup', effEnd);
+tEff.addEventListener('pointercancel', effEnd);
+
+tJump.addEventListener('pointerdown', e => {
+  tJump.setPointerCapture(e.pointerId);
+  TOUCH.ptrs.set(e.pointerId, 'jump');
+  tJump.classList.add('on');
+  GAME.space();
+});
+const jumpEnd = e => { TOUCH.ptrs.delete(e.pointerId); tJump.classList.remove('on'); };
+tJump.addEventListener('pointerup', jumpEnd);
+tJump.addEventListener('pointercancel', jumpEnd);
+
+tPause.addEventListener('pointerdown', e => { e.stopPropagation(); GAME.togglePause(); });
+
+// phone lifecycle: shade pulls, calls and app switches may never deliver a
+// pointerup — clear held steering and pause rather than ski into the trees
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    TOUCH.steer = 0; TOUCH.ptrs.clear(); tSteerNub.style.display = 'none';
+    if (GAME.state === 'run') GAME.togglePause();
+  }
+});
+addEventListener('gesturestart', e => e.preventDefault());   // iOS pinch, belt-and-braces
 </script>
 </body>
 </html>
