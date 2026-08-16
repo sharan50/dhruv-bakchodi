@@ -1112,7 +1112,7 @@ function stepPhysics(dt) {
           tap of steering nudges you instead of jerking you sideways.     -- */
     const engage = (0.16 + 0.84 * Math.abs(S.edge)) * tuckMul;
     const snowGrip = lerp(1, 0.62, S.offPiste);      // powder holds an edge poorly
-    const gripSpeed = 1 - 0.5 * sstep(11, 28, sp);
+    const gripSpeed = 1 - 0.5 * sstep(7, 16.7, sp);   // full hold to ~25 km/h, halved by 60
     const gripMax = PHYS.GRIP[eff] * gN * engage * snowGrip * gripSpeed
                     * (1 - 0.5 * S.unweight);
     const need = Math.abs(vl) / Math.max(dt, 1e-4);
